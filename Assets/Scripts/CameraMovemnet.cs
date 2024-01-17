@@ -20,13 +20,13 @@ public class CameraMovemnet : MonoBehaviour
         var mousepos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (transform.position.x <= rimitLeft)
         {
-            if (mousepos.x <= -15f)
-                mousepos.x = -15f;
+            if (mousepos.x <= rimitLeft)
+                mousepos.x = rimitLeft;
         }
         else if (transform.position.x >= rimitRight)
         {
-            if (mousepos.x >= 15f)
-                mousepos.x = 15f;
+            if (mousepos.x >= rimitRight)
+                mousepos.x = rimitRight;
         }
 
         if(mousepos.y < 2f)

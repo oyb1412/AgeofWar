@@ -1,75 +1,249 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UiManager : MonoBehaviour
 {
-    public static UiManager Instance;
-
+    [Header("Other")]
+    public float currentCreateTime;
+    public int createBlockCount;
+    public int createBlockMaxCount;
+    bool isCreate;
     [Header("Button")]
-    public GameObject[] unitBtns;
-    public GameObject towerBtns;
-    public GameObject upgradeBtns;
+    public Button selectUnitBtns;
+    public Button selectTowerBtns;
+    public Button selectSellBtns;
+    public Button selectAddBtns;
+    public Button selectUpgradeBtns;
 
-    [Header("Text")]
-    public Text baseHpText;
-    public Text goldText;
-    public Text expText;
+    [Header("Obj")]
+    public GameObject[] unitPanel;
+    public GameObject[] towerPanel;
+    public GameObject skillObj;
+    public GameObject selectMainPanel;
 
-    [Header("Sprite")]
-    public Sprite[] level1_CharImage;
-    public Sprite[] level1_TowerImage;
-    public Sprite level1_SkillImage;
-    public Sprite level1_UpgradeImage;
+    [Header("Slider")]
+    public Slider createBar;
 
-    [Header("Char")]
-    public MikataChar[] level0_CharPrefabs;
-    public GameObject[] level0_TowerPrefabs;
+    [Header("Block")]
+    public GameObject[] createBlock;
 
-    private void Awake()
+    private void Update()
     {
-        Instance = this;
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-
+        if (isCreate)
+            currentCreateTime += Time.deltaTime;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ClickUnitBtn()
     {
-        expText.text = GameManager.instance.baseExp.ToString();
-        goldText.text = string.Format("{0:f0}", GameManager.instance.currentGold);
-    }
+        selectMainPanel.SetActive(false);
+        var level = GameManager.instance.mikataBase.currentLevel;
+        unitPanel[level].SetActive(true);
+    }   
+    public void ClickTowerBtn()
+    {
+        selectMainPanel.SetActive(false);
+        var level = GameManager.instance.mikataBase.currentLevel;
+        towerPanel[level].SetActive(true);
+    } 
 
-    public void Unit1Click()
+    public void CreateUnit0Btn(int index)
     {
-        if (level0_CharPrefabs[0].useGold < GameManager.instance.currentGold)
+        if (GameManager.instance.currentGold >= GameManager.instance.chars2[index].buyGold[0])
         {
-            Instantiate(level0_CharPrefabs[0]);
-            GameManager.instance.currentGold -= level0_CharPrefabs[0].useGold;
+            if (createBlockCount < createBlockMaxCount)
+            {
+                createBlock[createBlockCount].SetActive(true);
+                createBlockCount++;
+                isCreate = true;
+                StartCoroutine(CreateUnit(GameManager.instance.chars2[index].createTime[0], index, 0));
+            }
         }
     }
 
-    public void Unit2Click()
+ 
+    public void CreateUnit1Btn(int index)
     {
-        if (level0_CharPrefabs[1].useGold < GameManager.instance.currentGold)
+        if (GameManager.instance.currentGold >= GameManager.instance.chars2[index].buyGold[1])
         {
-            Instantiate(level0_CharPrefabs[1]);
-            GameManager.instance.currentGold -= level0_CharPrefabs[1].useGold;
-
+            if (createBlockCount < createBlockMaxCount)
+            {
+                createBlock[createBlockCount].SetActive(true);
+                createBlockCount++;
+                isCreate = true;
+                StartCoroutine(CreateUnit(GameManager.instance.chars2[index].createTime[1], index, 1));
+            }
+        }
+    }    
+    public void CreateUnit2Btn(int index)
+    {
+        if (GameManager.instance.currentGold >= GameManager.instance.chars2[index].buyGold[2])
+        {
+            if (createBlockCount < createBlockMaxCount)
+            {
+                createBlock[createBlockCount].SetActive(true);
+                createBlockCount++;
+                isCreate = true;
+                StartCoroutine(CreateUnit(GameManager.instance.chars2[index].createTime[2], index, 2));
+            }
         }
     }
 
-    public void Unit3Click()
+    public void CreateTower0Btn(int index)
     {
-        if (level0_CharPrefabs[2].useGold < GameManager.instance.currentGold)
+        if (GameManager.instance.currentGold >= GameManager.instance.towers[index].buyGold[0])
         {
-            
-            Instantiate(level0_CharPrefabs[2]);
-            GameManager.instance.currentGold -= level0_CharPrefabs[2].useGold;
+            if (GameManager.instance.mikataBase.currentTowerCount < GameManager.instance.mikataBase.currentTowerFrameCount)
+            {
+                if (GameManager.instance.mikataBase.currentTowerCount < GameManager.instance.maxTowerCount)
+                {
+                    var unit = Instantiate(GameManager.instance.towers[index].tower[0]).transform;
+                    switch (GameManager.instance.mikataBase.currentTowerCount)
+                    {
+                        case 0:
+                            unit.position = new Vector3(-13.1f, -1.2f, 0f);
+                            break;
+                        case 1:
+                            unit.position = new Vector3(-13.1f, 0f, 0f);
+                            break;
+                        case 2:
+                            unit.position = new Vector3(-13.1f, 1f, 0f);
+                            break;
+                    }
+                    GameManager.instance.mikataBase.currentTowerCount++;
+                    GameManager.instance.currentGold -= GameManager.instance.towers[index].buyGold[0];
+                }
+            }
         }
+    }
+    public void CreateTower1Btn(int index)
+    {
+        if (GameManager.instance.currentGold >= GameManager.instance.towers[index].buyGold[1])
+        {
+            if (GameManager.instance.mikataBase.currentTowerCount < GameManager.instance.mikataBase.currentTowerFrameCount)
+            {
+                if (GameManager.instance.mikataBase.currentTowerCount < GameManager.instance.maxTowerCount)
+                {
+                    var unit = Instantiate(GameManager.instance.towers[index].tower[1]).transform;
+                    switch (GameManager.instance.mikataBase.currentTowerCount)
+                    {
+                        case 0:
+                            unit.position = new Vector3(-13.1f, -1.2f, 0f);
+                            break;
+                        case 1:
+                            unit.position = new Vector3(-13.1f, 0f, 0f);
+                            break;
+                        case 2:
+                            unit.position = new Vector3(-13.1f, 1f, 0f);
+                            break;
+                    }
+                    GameManager.instance.mikataBase.currentTowerCount++;
+                    GameManager.instance.currentGold -= GameManager.instance.towers[index].buyGold[1];
+                }
+            }
+        }
+    }
+    public void CreateTower2Btn(int index)
+    {
+        if (GameManager.instance.currentGold >= GameManager.instance.towers[index].buyGold[2])
+        {
+            if (GameManager.instance.mikataBase.currentTowerCount < GameManager.instance.mikataBase.currentTowerFrameCount)
+            {
+                if (GameManager.instance.mikataBase.currentTowerCount < GameManager.instance.maxTowerCount)
+                {
+                    var unit = Instantiate(GameManager.instance.towers[index].tower[2]).transform;
+                    switch (GameManager.instance.mikataBase.currentTowerCount)
+                    {
+                        case 0:
+                            unit.position = new Vector3(-13.1f, -1.2f, 0f);
+                            break;
+                        case 1:
+                            unit.position = new Vector3(-13.1f, 0f, 0f);
+                            break;
+                        case 2:
+                            unit.position = new Vector3(-13.1f, 1f, 0f);
+                            break;
+                    }
+                    GameManager.instance.mikataBase.currentTowerCount++;
+                    GameManager.instance.currentGold -= GameManager.instance.towers[index].buyGold[2];
+                }
+            }
+        }
+    }
+
+    public void ClickSellBtn()
+    {
+
+    }
+    public void ClickAddBtn()
+    {
+        GameManager.instance.TowerFrameAddClick();
+    } 
+    public void ClickUpgradeBtn()
+    {
+        GameManager.instance.BaseLevelUpClick();
+    } 
+
+    public void ClickSkillBtn()
+    {
+        var fill = skillObj.GetComponent<Image>();
+
+        if (fill.fillAmount >= 1f)
+        {
+            fill.fillAmount = 0;
+            StartCoroutine(SkillFillCorutine());
+        }
+    }
+    IEnumerator CreateUnit(float createtime, int index, int unitnum)
+    {
+        GameManager.instance.currentGold -= GameManager.instance.chars2[index].buyGold[unitnum];
+
+        while (true)
+        {
+            createBar.value = currentCreateTime / createtime;
+            yield return null;
+            if (createBar.value >= 1f)
+            {
+                var unit = Instantiate(GameManager.instance.chars2[index].chars1[unitnum]).transform;
+                unit.position = new Vector3(-12.5f, -3.5f, 0f);
+                currentCreateTime = 0f;
+                createBar.value = 0f;
+                createBlockCount--;
+                createBlock[createBlockCount].SetActive(false);
+            }
+
+            if (createBlockCount < 1)
+            {
+                isCreate = false;
+                break;
+            }
+        }
+    }
+    IEnumerator SkillFillCorutine()
+    {
+        var fill = skillObj.GetComponent<Image>();
+
+        while (true)
+        {
+            fill.fillAmount += Time.deltaTime / 60;
+            yield return new WaitForSeconds(0.01f);
+
+            if (fill.fillAmount >= 1f)
+                break;
+        }
+    }
+
+    public void ClickReturnBtn()
+    {
+        for(int i = 0; i < unitPanel.Length;i++)
+        {
+            unitPanel[i].SetActive(false);
+            towerPanel[i].SetActive(false);
+        }
+        selectMainPanel.SetActive(true);
+
     }
 }
