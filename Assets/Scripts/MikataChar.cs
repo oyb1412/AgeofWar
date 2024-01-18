@@ -5,7 +5,14 @@ using UnityEngine;
 
 public class MikataChar : CharBase
 {
-
+    internal bool skill2On;
+    public GameObject skill2Prefabs;
+    GameObject skill2Object;
+    private void Awake()
+    {
+        skill2Object = Instantiate(skill2Prefabs, transform);
+        skill2Object.gameObject.SetActive(false);
+    }
     private void FixedUpdate()
     {
         Movement(charType.MIKATA);
@@ -13,6 +20,12 @@ public class MikataChar : CharBase
 
     override protected void Update()
     {
+        if(skill2On)
+        {
+            skill2Object.transform.position = new Vector2(transform.position.x, transform.position.y - 0.3f);
+            skill2Object.SetActive(true);
+            currentHP += Time.deltaTime;
+        }
         if (UnitType == unitType.RANGE)
         {
             LayerMask lay = LayerMask.GetMask("Teki");

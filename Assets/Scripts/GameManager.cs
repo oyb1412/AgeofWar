@@ -9,14 +9,15 @@ public enum baseType{ MIKATA,TEKI}
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+    public CameraMovemnet mainCamera;
     [Header("--MikataBaseInfo--")]
-    public int maxTowerFrameCount = 3;
+    public int maxTowerFrameCount = 4;
     public int maxTowerCount = 3;
     public float baseMaxHp;
     public int baseMaxLevel = 4;
     public float currentGold;
     public int currentExp;
-    public int[] frameAddGold = { 50, 100, 150 };
+    public int[] frameAddGold = { 50, 100, 150, 200 };
     public int[] upgradeEXP = { 100, 150, 200,250,300 };
     public int[] maxEXP = { 100, 150, 200,250,300 };
     [Header("--BasePrefabs--")]
@@ -90,8 +91,8 @@ public class GameManager : MonoBehaviour
     {
         baseMaxHp = 2000;
 
-        maxTowerCount = 3;
-        maxTowerFrameCount = 3;
+        maxTowerCount = 4;
+        maxTowerFrameCount = 4;
         mikataBase.towerFrame = new GameObject[maxTowerFrameCount];
         tekiBase.towerFrame = new GameObject[maxTowerFrameCount];
 
@@ -104,6 +105,7 @@ public class GameManager : MonoBehaviour
             mikataBase.towerFrame[i] = mikataBase.baseObj.transform.GetChild(i).gameObject;
             tekiBase.towerFrame[i] = tekiBase.baseObj.transform.GetChild(i).gameObject;
         }
+        mikataBase.currentTowerFrameCount = 1;
     }
     public void TowerFrameAddClick()
     {

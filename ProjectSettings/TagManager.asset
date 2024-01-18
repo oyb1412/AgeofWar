@@ -10,6 +10,11 @@ TagManager:
   - TekiChar
   - MikataBase
   - TekiBase
+  - TowerFrame
+  - TowerFrame0
+  - TowerFrame1
+  - TowerFrame2
+  - TowerFrame3
   layers:
   - Default
   - TransparentFX

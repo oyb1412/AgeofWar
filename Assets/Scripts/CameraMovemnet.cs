@@ -7,8 +7,12 @@ public class CameraMovemnet : MonoBehaviour
     public float cameraSpeed;
     public float rimitLeft;
     public float rimitRight;
-    
+    Vector3 currentPos;
 
+    private void Start()
+    {
+        
+    }
     // Update is called once per frame
     void Update()
     {
@@ -31,5 +35,28 @@ public class CameraMovemnet : MonoBehaviour
 
         if(mousepos.y < 2f)
         transform.position = Vector3.Lerp(transform.position, new Vector3(mousepos.x, 0f, -10f), cameraSpeed * Time.deltaTime);
+    }
+
+    public void ScreenShake()
+    {
+        currentPos = transform.position;
+        StartCoroutine(Shake());
+    }
+
+    IEnumerator Shake()
+    {
+        float elapsedTime = 0f;
+
+        while (elapsedTime < 2f)
+        {
+            Vector3 shakeOffset = Random.insideUnitSphere * 0.1f;
+
+            transform.position = currentPos + shakeOffset;
+
+            elapsedTime += Time.deltaTime;
+
+            yield return null;
+        }
+
     }
 }
