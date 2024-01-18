@@ -15,7 +15,9 @@ public class TekiChar : CharBase
     {
         if (UnitType == unitType.RANGE)
         {
-            var target = Physics2D.CircleCast(transform.position, attackRange, Vector2.zero, 0, LayerMask.GetMask("Mikata"));
+            LayerMask lay = LayerMask.GetMask("Mikata");
+
+            var target = Physics2D.CircleCast(transform.position, attackRange, Vector2.zero, 0, lay);
             if (target)
             {
                 isBattle = true;
@@ -28,7 +30,7 @@ public class TekiChar : CharBase
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.CompareTag("MikataChar"))
+        if (collision.collider.CompareTag("MikataChar") || collision.collider.CompareTag("MikataBase"))
         {
             isBattle = true;
             isMove = false;

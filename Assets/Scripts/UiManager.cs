@@ -208,7 +208,7 @@ public class UiManager : MonoBehaviour
             if (createBar.value >= 1f)
             {
                 var unit = Instantiate(GameManager.instance.chars2[index].chars1[unitnum]).transform;
-                unit.position = new Vector3(-12.5f, -3.5f, 0f);
+                unit.position = transform.position;
                 currentCreateTime = 0f;
                 createBar.value = 0f;
                 createBlockCount--;

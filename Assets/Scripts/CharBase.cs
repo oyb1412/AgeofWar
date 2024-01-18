@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum charType { MIKATA, TEKI}
 public enum unitType { MELEE, RANGE}
@@ -27,6 +28,9 @@ public class CharBase : MonoBehaviour
     public Collider2D attackCol;
     Collider2D col;
     Rigidbody2D rigid;
+    public GameObject bulletPrefabs;
+    public Slider hpBarPrefabs;
+    Slider hpBar;
     // Start is called before the first frame update
     protected void Start()
     {
@@ -41,12 +45,58 @@ public class CharBase : MonoBehaviour
             attackCol = transform.GetChild(0).GetComponent<Collider2D>();
             attackCol.enabled = false;
         }
+        hpBar = Instantiate(hpBarPrefabs, GameObject.Find("WorldCanvas").transform);
+        hpBar.gameObject.SetActive(false);
+    }
+
+    virtual protected void Update()
+    {
+        if (isBattle)
+        {
+            attackTimer += Time.deltaTime;
+            if (attackTimer > attackSpeed)
+            {
+                anime.SetBool("Run", false);
+                anime.SetTrigger("Attack");
+                attackTimer = 0;
+            }
+        }
+
+        if (currentHP <= 0)
+        {
+            anime.SetBool("Run", false);
+            isBattle = false;
+            isMove = false;
+            StartCoroutine(DeadAnimeCorutine());
+        }
+
+        if(currentHP < maxHP)
+        {
+            hpBar.gameObject.SetActive(true);
+            hpBar.value = currentHP / maxHP;
+            hpBar.GetComponent<RectTransform>().transform.position = new Vector2(transform.position.x,transform.position.y + 0.6f);
+        }
     }
     public void OnMeleeCol()
     {
         StartCoroutine(OnMeleeColCorutine());
     }
 
+    public void OnRangeAttack()
+    {
+        var bullet = Instantiate(bulletPrefabs,transform.position, Quaternion.identity);
+        switch(CharType)
+        {
+            case charType.MIKATA:
+                bullet.GetComponent<CharBullet>().Init(damage, (int)charType.MIKATA);
+
+                break;
+            case charType.TEKI:
+                bullet.GetComponent<CharBullet>().Init(damage, (int)charType.TEKI);
+
+                break;
+        }
+    }
     IEnumerator OnMeleeColCorutine()
     {
         attackCol.enabled = true;
@@ -58,31 +108,15 @@ public class CharBase : MonoBehaviour
     {
         rigid.simulated = false;
         col.enabled = false;
+        isBattle = false;
+        isMove = false;
+        hpBar.gameObject.SetActive(false);
+        anime.SetBool("Run", false);
         anime.SetTrigger("Die");
         yield return new WaitForSeconds(deadAnimeTimer);
         Destroy(gameObject);
     }
-    virtual protected void Update()
-    {
-        if(isBattle)
-        {
-            attackTimer += Time.deltaTime;
-            if(attackTimer > attackSpeed)
-            {
-                anime.SetBool("Run", false);
-                anime.SetTrigger("Attack");
-                attackTimer = 0;
-            }
-        }
-
-        if(currentHP <= 0)
-        {
-            anime.SetBool("Run", false);
-            isBattle = false;
-            isMove = false;
-            StartCoroutine(DeadAnimeCorutine());
-        }
-    }
+ 
 
     protected void Movement(charType type)
     {

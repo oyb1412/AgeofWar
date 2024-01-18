@@ -124,9 +124,9 @@ MonoBehaviour:
   CharType: 0
   UnitType: 1
   speed: 1
-  damage: 5
+  damage: 1
   attackSpeed: 1
-  attackRange: 1.2
+  attackRange: 1
   currentHP: 5
   maxHP: 5
   createTime: 1
@@ -134,6 +134,9 @@ MonoBehaviour:
   isLive: 0
   isMove: 0
   isBattle: 0
+  attackCol: {fileID: 0}
+  bulletPrefabs: {fileID: 7151351636775130230, guid: 8a39cf394f328e045a4834951fdf9cf5, type: 3}
+  hpBarPrefabs: {fileID: 1494851717418582748, guid: a21fc51a90ec44744966317171d73e1e, type: 3}
 --- !u!61 &-2305998736558492985
 BoxCollider2D:
   m_ObjectHideFlags: 0

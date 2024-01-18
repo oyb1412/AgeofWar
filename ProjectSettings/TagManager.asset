@@ -8,6 +8,8 @@ TagManager:
   - Base
   - MikataChar
   - TekiChar
+  - MikataBase
+  - TekiBase
   layers:
   - Default
   - TransparentFX

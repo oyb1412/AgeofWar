@@ -20,7 +20,6 @@ public class GameManager : MonoBehaviour
     public int[] upgradeEXP = { 100, 150, 200,250,300 };
     public int[] maxEXP = { 100, 150, 200,250,300 };
     [Header("--BasePrefabs--")]
-    public GameObject[] BasePrefab;
 
     [Header("--UI--")]
     public Text goldText;
@@ -44,7 +43,7 @@ public class GameManager : MonoBehaviour
         public float[] createTime;
     }
     [System.Serializable]
-    public class MikataBase
+    public class MikataBase 
     {
         public GameObject baseObj;
         public int currentTowerCount;
@@ -52,18 +51,22 @@ public class GameManager : MonoBehaviour
         public float currentHp;
         public int currentLevel;
         public GameObject[] towerFrame;
+        public GameObject[] BasePrefab;
+
         public Slider hpBar;
         public Text hpText;
     }
 
     [System.Serializable]
-    public class TekiBase
+    public class TekiBase 
     {
         public GameObject baseObj;
         public int currentTowerCount;
         public float currentHp;
         public int currentLevel;
         public GameObject[] towerFrame;
+        public GameObject[] BasePrefab;
+
         public Slider hpBar;
         public Text hpText;
     }
@@ -85,17 +88,15 @@ public class GameManager : MonoBehaviour
 
     void Init()
     {
-        baseMaxHp = 500;
-        mikataBase.currentHp = 1;
-        tekiBase.currentHp =100 ;
+        baseMaxHp = 2000;
 
         maxTowerCount = 3;
         maxTowerFrameCount = 3;
         mikataBase.towerFrame = new GameObject[maxTowerFrameCount];
         tekiBase.towerFrame = new GameObject[maxTowerFrameCount];
 
-        mikataBase.baseObj = Instantiate(BasePrefab[mikataBase.currentLevel], null);
-        tekiBase.baseObj = Instantiate(BasePrefab[tekiBase.currentLevel], null);
+        mikataBase.baseObj = Instantiate(mikataBase.BasePrefab[mikataBase.currentLevel], null);
+        tekiBase.baseObj = Instantiate(tekiBase.BasePrefab[tekiBase.currentLevel], null);
         tekiBase.baseObj.GetComponent<SpriteRenderer>().flipX = true;
         tekiBase.baseObj.transform.position = new Vector3(13f, -2.1f, 0f);
         for (int i = 0; i < maxTowerCount; i++)
@@ -126,7 +127,7 @@ public class GameManager : MonoBehaviour
             {
                 mikataBase.currentLevel++;
                 Destroy(mikataBase.baseObj);
-                mikataBase.baseObj = Instantiate(BasePrefab[mikataBase.currentLevel], null);
+                mikataBase.baseObj = Instantiate(mikataBase.BasePrefab[mikataBase.currentLevel], null);
                 skillPrefab.GetComponent<Image>().sprite = skillImage[mikataBase.currentLevel];
                 for (int i = 0; i < maxTowerCount; i++)
                 {

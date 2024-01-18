@@ -126,6 +126,7 @@ MonoBehaviour:
   speed: 1
   damage: 5
   attackSpeed: 1
+  attackRange: 0
   currentHP: 5
   maxHP: 5
   createTime: 1
@@ -133,13 +134,9 @@ MonoBehaviour:
   isLive: 0
   isMove: 0
   isBattle: 0
-  layer:
-    serializedVersion: 2
-    m_Bits: 128
-  rayRange: 0.5
-  tekiTargets: []
-  mikataTargets: []
-  charTargets: []
+  attackCol: {fileID: 0}
+  bulletPrefabs: {fileID: 0}
+  hpBarPrefabs: {fileID: 1494851717418582748, guid: a21fc51a90ec44744966317171d73e1e, type: 3}
 --- !u!61 &499697474991547033
 BoxCollider2D:
   m_ObjectHideFlags: 0
