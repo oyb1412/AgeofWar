@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 9030415589690258310}
   - component: {fileID: -1527756532947589501}
   - component: {fileID: 724436014292681689}
-  m_Layer: 0
+  - component: {fileID: -8566653151113207866}
+  m_Layer: 13
   m_Name: Tower2_1
-  m_TagString: Untagged
+  m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -74,8 +75,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: 5e61f985c9aac3b48b7bd159fed413cd, type: 3}
+  m_SortingOrder: 3
+  m_Sprite: {fileID: -1040671470, guid: 9ab7e3ee9eddb36428449bc77f6ddd4f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -102,11 +103,12 @@ MonoBehaviour:
   attackTimer: 0
   attackSpeed: 1
   attackDamage: 1
-  bulletSpeed: 1
-  attackRange: 3
+  bulletSpeed: 10
+  attackRange: 15
   moveDir: {x: 0, y: 0}
   bulletPrefabs: {fileID: 6400324762735755488, guid: 4993c4a4fb3978e49bcac0a16e2890d5, type: 3}
   charTarget: {fileID: 0}
+  towerSellGold: 50
 --- !u!95 &724436014292681689
 Animator:
   serializedVersion: 5
@@ -128,3 +130,48 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!61 &-8566653151113207866
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8820312289560915552}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.0020165294, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.33, y: 0.13}
+    newSize: {x: 0.56, y: 0.13}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.3422149, y: 0.13}
+  m_EdgeRadius: 0

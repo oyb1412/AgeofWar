@@ -1,18 +1,44 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TekiChar : CharBase
 {
     // Start is called before the first frame update
+    public GameObject getGoldImage;
+    public Text getGoldText;
+    public int getGold;
+    GameObject gold;
+    private void Awake()
+    {
+        
+    }
 
     private void FixedUpdate()
     {
         Movement(charType.TEKI);
     }
 
+
+
     override protected void Update()
     {
+        if (currentHP <= 0 && isLive)
+        {
+            gold = Instantiate(getGoldImage, GameObject.Find("WorldCanvas").transform);
+            gold.transform.position = new Vector2(transform.position.x + 0.2f, transform.position.y);
+            getGoldText = getGoldImage.GetComponentInChildren<Text>();
+            getGoldText.text = getGold.ToString();
+            gold.transform.Translate(0f, 1f * Time.deltaTime, 0f);
+            if (gold.transform.position.y > -2.3f)
+            {
+                isLive = false;
+                Destroy(gold);
+
+            }
+        }
+
         if (UnitType == unitType.RANGE)
         {
             LayerMask lay = LayerMask.GetMask("Mikata");

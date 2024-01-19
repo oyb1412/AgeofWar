@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class MikataChar : CharBase
 {
-    internal bool skill2On;
+    public bool skill2On;
+    public string charName;
     public GameObject skill2Prefabs;
     GameObject skill2Object;
     private void Awake()
@@ -45,6 +46,7 @@ public class MikataChar : CharBase
     {
         if(collision.collider.CompareTag("TekiChar") || collision.collider.CompareTag("TekiBase"))
         {
+            Debug.Log("Ãæµ¹ÇÔ");
             isBattle = true;
             isMove = false;
         }

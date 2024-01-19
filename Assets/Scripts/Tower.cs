@@ -12,8 +12,13 @@ public class Tower : MonoBehaviour
     public GameObject bulletPrefabs;
     RaycastHit2D target;
     public CharBase charTarget;
+    public float towerSellGold;
+    Animator anime;
     // Start is called before the first frame update
-
+    private void Start()
+    {
+        anime = GetComponent<Animator>();
+    }
     // Update is called once per frame
     void Update()
     {
@@ -33,13 +38,16 @@ public class Tower : MonoBehaviour
         if (charTarget != null)
         {
             attackTimer += Time.deltaTime;
-            var angle = Mathf.Atan2(charTarget.transform.position.y - transform.position.y, charTarget.transform.position.x - transform.position.x) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.Euler(0, 0, angle);
+
             if (attackTimer > attackSpeed)
             {
+                var angle = Mathf.Atan2(charTarget.transform.position.y - transform.position.y, charTarget.transform.position.x - transform.position.x) * Mathf.Rad2Deg;
+                transform.rotation = Quaternion.Euler(0, 0, angle);
+                anime.Play("Attack");
                 attackTimer = 0;
                 moveDir = (charTarget.transform.position - transform.position).normalized;
-                var bullet = Instantiate(bulletPrefabs, transform.position, Quaternion.identity);
+                var bullet = Instantiate(bulletPrefabs,null);
+                bullet.transform.position = transform.position;
                 bullet.GetComponent<TowerBullet>().Init(attackDamage, bulletSpeed, moveDir, towerType);
                 
             }

@@ -128,8 +128,24 @@ public class GameManager : MonoBehaviour
             if (mikataBase.currentLevel < baseMaxLevel)
             {
                 mikataBase.currentLevel++;
+ 
                 Destroy(mikataBase.baseObj);
                 mikataBase.baseObj = Instantiate(mikataBase.BasePrefab[mikataBase.currentLevel], null);
+                if (mikataBase.currentTowerFrameCount == 2)
+                    mikataBase.towerFrame[1].SetActive(true);
+                if (mikataBase.currentTowerFrameCount == 3)
+                {
+                    mikataBase.towerFrame[1].SetActive(true);
+                    mikataBase.towerFrame[2].SetActive(true);
+                }
+                if (mikataBase.currentTowerFrameCount == 4)
+                {
+                    mikataBase.towerFrame[1].SetActive(true);
+                    mikataBase.towerFrame[2].SetActive(true);
+                    mikataBase.towerFrame[3].SetActive(true);
+                }
+
+
                 skillPrefab.GetComponent<Image>().sprite = skillImage[mikataBase.currentLevel];
                 for (int i = 0; i < maxTowerCount; i++)
                 {
@@ -168,5 +184,40 @@ public class GameManager : MonoBehaviour
         tekiBase.hpText.text = string.Format("{0:f0}", tekiBase.currentHp);
         goldText.text = string.Format("{0:f0}", currentGold);
         expText.text = currentExp.ToString();
+    }
+
+    public static Collider2D MouseRayCast(string tag)
+    {
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero, 0f);
+
+        if (hit.collider != null && hit.collider.CompareTag(tag))
+        {
+            return hit.collider;
+        }
+        else
+            return null;
+    }
+
+    public static Collider2D MouseRayCastAll(string tag)
+    {
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        RaycastHit2D[] hit = Physics2D.RaycastAll(mousePos, Vector2.zero, 0f);
+        Collider2D col = null;
+        for(int i = 0; i < hit.Length; i++)
+        {
+            if (hit[i].collider.gameObject.tag == tag)
+            {
+                col = hit[i].collider;
+                break;
+
+            }
+            else
+                return null;
+
+            
+
+        }
+        return col;
     }
 }

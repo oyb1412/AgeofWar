@@ -28,6 +28,9 @@ public class TowerBullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (collision.CompareTag("Tower"))
+            return;
+
         switch(bulletType)
         {
             case towerType.MIKATA:

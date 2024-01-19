@@ -30,7 +30,8 @@ public class CharBase : MonoBehaviour
     Rigidbody2D rigid;
     public GameObject bulletPrefabs;
     public Slider hpBarPrefabs;
-    Slider hpBar;
+    public Slider hpBar;
+
     // Start is called before the first frame update
     protected void Start()
     {
@@ -53,10 +54,10 @@ public class CharBase : MonoBehaviour
     {
         if (isBattle)
         {
+            anime.SetBool("Run", false);
             attackTimer += Time.deltaTime;
             if (attackTimer > attackSpeed)
             {
-                anime.SetBool("Run", false);
                 anime.SetTrigger("Attack");
                 attackTimer = 0;
             }
@@ -69,12 +70,10 @@ public class CharBase : MonoBehaviour
             isMove = false;
             StartCoroutine(DeadAnimeCorutine());
         }
-
-        if(currentHP < maxHP)
+        hpBar.GetComponent<RectTransform>().transform.position = new Vector2(transform.position.x, transform.position.y + 0.6f);
+        if (currentHP < maxHP)
         {
-            hpBar.gameObject.SetActive(true);
             hpBar.value = currentHP / maxHP;
-            hpBar.GetComponent<RectTransform>().transform.position = new Vector2(transform.position.x,transform.position.y + 0.6f);
         }
     }
     public void OnMeleeCol()

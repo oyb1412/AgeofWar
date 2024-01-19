@@ -7,7 +7,9 @@ using Unity.VisualScripting;
 using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.UI;
-
+using UnityEngine.EventSystems;
+using static UnityEngine.GraphicsBuffer;
+using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 public class UiManager : MonoBehaviour
 {
     [Header("Other")]
@@ -15,6 +17,13 @@ public class UiManager : MonoBehaviour
     public int createBlockCount;
     public int createBlockMaxCount;
     bool isCreate;
+
+    [Header("Text")]
+    public Text titleText;
+    public Text mouseOnText;
+    public Text createText;
+    public Text towerSellText;
+
 
     [Header("Button")]
     public Button selectUnitBtns;
@@ -29,6 +38,7 @@ public class UiManager : MonoBehaviour
     public GameObject skillObj;
     public GameObject selectMainPanel;
     public GameObject mouseOnPrefab;
+    public GameObject towerSellImage;
 
     [Header("Slider")]
     public Slider createBar;
@@ -41,28 +51,63 @@ public class UiManager : MonoBehaviour
     private int skill0Count;
     private int skill3Count;
 
+    CharBase mikata;
+    CharBase teki;
+    SpriteRenderer[] save;
+
     private void Start()
     {
+        towerSellImage.SetActive(false);
         mouseOnPrefab.SetActive(false);
+        save = new SpriteRenderer[4];
     }
     private void Update()
     {
         if (isCreate)
             currentCreateTime += Time.deltaTime;
-    }
 
+        CharHpBarOnOff("MikataChar");
+        CharHpBarOnOff("TekiChar");
+    }
+    void CharHpBarOnOff(string tag)
+    {
+
+        if (tag == "MikataChar")
+        {
+            if (GameManager.MouseRayCast(tag))
+            {
+                mikata = GameManager.MouseRayCast(tag).GetComponent<CharBase>();
+                mikata.hpBar.gameObject.SetActive(true);
+            }
+            else if (mikata)
+                mikata.hpBar.gameObject.SetActive(false);
+        }
+        else
+        {
+            if (GameManager.MouseRayCast(tag))
+            {
+               teki = GameManager.MouseRayCast(tag).GetComponent<CharBase>();
+               teki.hpBar.gameObject.SetActive(true);
+            }
+            else if (teki)
+                teki.hpBar.gameObject.SetActive(false);
+        }
+    }
     public void ClickUnitBtn()
     {
         selectMainPanel.SetActive(false);
         var level = GameManager.instance.mikataBase.currentLevel;
         unitPanel[level].SetActive(true);
+        titleText.text = "Unit";
     }   
     public void ClickTowerBtn()
     {
         selectMainPanel.SetActive(false);
         var level = GameManager.instance.mikataBase.currentLevel;
         towerPanel[level].SetActive(true);
-    } 
+        titleText.text = "Tower";
+
+    }
 
     public void CreateUnit0Btn(int index)
     {
@@ -71,6 +116,11 @@ public class UiManager : MonoBehaviour
             if (createBlockCount < createBlockMaxCount)
             {
                 createBlock[createBlockCount].SetActive(true);
+                switch(createBlockCount)
+                {
+                    case 0:
+                        break;
+                }
                 createBlockCount++;
                 isCreate = true;
                 StartCoroutine(CreateUnit(GameManager.instance.chars2[index].createTime[0], index, 0));
@@ -104,6 +154,7 @@ public class UiManager : MonoBehaviour
         }
     }
 
+
     public void CreateUnit1Btn(int index)
     {
         if (GameManager.instance.currentGold >= GameManager.instance.chars2[index].buyGold[1])
@@ -136,23 +187,43 @@ public class UiManager : MonoBehaviour
         StartCoroutine(TowerCreateCorutine(index,0));
     }
 
+    void MouseOn(Collider2D tag, int index)
+    {
+        
+        if (tag)
+        {
+            save[index] = tag.GetComponentsInChildren<SpriteRenderer>()[1];
+            save[index].gameObject.transform.localScale = new Vector2(2f, 2f);
+        }
+        else if (save[index])
+            save[index].gameObject.transform.localScale = Vector2.zero;
+    }
+
+
     IEnumerator TowerCreateCorutine(int index, int num)
     {
-        while(true)
+        var btn = EventSystem.current.currentSelectedGameObject.GetComponent<TowerButton>();
+        mouseOnPrefab.GetComponent<Image>().sprite = btn.towerImage;
+        mouseOnPrefab.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.7f);
+        while (true)
         {
             var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mouseOnPrefab.transform.position = new Vector3(mousePos.x, mousePos.y, 0f);
             mouseOnPrefab.SetActive(true);
+
+            var frame0 = GameManager.MouseRayCast("TowerFrame0");
+            var frame1 = GameManager.MouseRayCast("TowerFrame1");
+            var frame2 = GameManager.MouseRayCast("TowerFrame2");
+            var frame3 = GameManager.MouseRayCast("TowerFrame3");
+            MouseOn(frame0, 0);
+            MouseOn(frame1, 1);
+            MouseOn(frame2, 2);
+            MouseOn(frame3, 3);
             yield return null;
 
-            if(Input.GetMouseButtonDown(0))
-            {
-                var frame0 = MouseRayCast("TowerFrame0");
-                var frame1 = MouseRayCast("TowerFrame1");
-                var frame2 = MouseRayCast("TowerFrame2");
-                var frame3 = MouseRayCast("TowerFrame3");
- 
-                    if (GameManager.instance.currentGold >= GameManager.instance.towers[index].buyGold[num])
+            if (Input.GetMouseButtonDown(0))
+                {
+                     if (GameManager.instance.currentGold >= GameManager.instance.towers[index].buyGold[num])
                     {
                         if (GameManager.instance.mikataBase.currentTowerCount < GameManager.instance.mikataBase.currentTowerFrameCount)
                         {
@@ -160,8 +231,7 @@ public class UiManager : MonoBehaviour
                             {
                             if (frame0)
                             {
-                               
-
+                             
                                 var frame = frame0.GetComponent<TowerFrame>();
                                 if (!frame.isUse)
                                 {
@@ -206,6 +276,11 @@ public class UiManager : MonoBehaviour
 
                             GameManager.instance.mikataBase.currentTowerCount++;
                             GameManager.instance.currentGold -= GameManager.instance.towers[index].buyGold[num];
+                            for (int i = 0; i < save.Length; i++)
+                            {
+                                if (save[i])
+                                    save[i].gameObject.transform.localScale = Vector2.zero;
+                            }
                             mouseOnPrefab.SetActive(false);
                             break;
                             }
@@ -214,9 +289,62 @@ public class UiManager : MonoBehaviour
             }
             else if(Input.GetMouseButtonDown(1))
             {
+                for (int i = 0; i < save.Length; i++)
+                {
+                    if (save[i])
+                        save[i].gameObject.transform.localScale = Vector2.zero;
+                }
                 mouseOnPrefab.SetActive(false);
                 break;
             }
+        }
+        
+
+    }
+
+    IEnumerator TowerSellCorutine()
+    {
+        while (true)
+        {
+            var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            towerSellImage.transform.position = new Vector3(mousePos.x, mousePos.y, 0f);
+            towerSellImage.SetActive(true);
+
+            var tower = GameManager.MouseRayCast("Tower");
+            if (tower)
+            {
+                var target = GameManager.MouseRayCast("Tower").GetComponent<Tower>();
+                towerSellText.text = target.towerSellGold.ToString();
+
+ 
+                if (Input.GetMouseButtonDown(0))
+                {
+                    var fraems = Physics2D.CircleCast(target.transform.position, 0.1f, Vector2.zero, 0,LayerMask.GetMask("TowerFrame"));
+                    
+                    if (fraems)
+                    {
+                        var on = fraems.transform.GetComponent<TowerFrame>();
+                        on.isUse = false;
+                    }
+                  
+                    GameManager.instance.currentGold += target.towerSellGold;
+                    GameManager.instance.mikataBase.currentTowerCount--;
+                    Destroy(target.gameObject);
+                    towerSellImage.SetActive(false);
+                    break;
+                }
+            }
+            else
+                towerSellText.text = "";
+
+
+
+            if (Input.GetMouseButtonDown(1))
+            {
+                towerSellImage.SetActive(false);
+                break;
+            }
+            yield return null;
         }
     }
     public void CreateTower1Btn(int index)
@@ -232,7 +360,8 @@ public class UiManager : MonoBehaviour
 
     public void ClickSellBtn()
     {
-
+        titleText.text = "Sell";
+        StartCoroutine(TowerSellCorutine());
     }
     public void ClickAddBtn()
     {
@@ -341,19 +470,8 @@ public class UiManager : MonoBehaviour
             towerPanel[i].SetActive(false);
         }
         selectMainPanel.SetActive(true);
-
+        titleText.text = "Menu";
     }
 
-    public Collider2D MouseRayCast(string tag)
-    {
-        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero, 0f);
 
-        if (hit.collider != null && hit.collider.CompareTag(tag))
-        {
-            return hit.collider;
-        }
-        else
-            return null;
-    }
 }

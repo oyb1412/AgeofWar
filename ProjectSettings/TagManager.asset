@@ -15,6 +15,7 @@ TagManager:
   - TowerFrame1
   - TowerFrame2
   - TowerFrame3
+  - Tower
   layers:
   - Default
   - TransparentFX
@@ -24,13 +25,13 @@ TagManager:
   - UI
   - Mikata
   - Teki
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - TowerFrame
+  - TowerFrame0
+  - TowerFrame1
+  - TowerFrame2
+  - TowerFrame3
+  - Tower
+  - Bullet
   - 
   - 
   - 

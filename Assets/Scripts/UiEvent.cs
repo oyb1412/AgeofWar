@@ -21,7 +21,8 @@ public class UiEvent : MonoBehaviour
         if (eventData.pointerCurrentRaycast.gameObject)
         {
             data = eventData.pointerCurrentRaycast.gameObject;
-            data.GetComponent<Image>().color = Color.gray;
+            if(data.GetComponent<Image>())
+                data.GetComponent<Image>().color = Color.gray;
         }
     }
 
@@ -29,7 +30,8 @@ public class UiEvent : MonoBehaviour
     {
         if (data)
         {
-            data.GetComponent<Image>().color = Color.white;
+            if (data.GetComponent<Image>())
+                data.GetComponent<Image>().color = Color.white;
         }
     }
 
