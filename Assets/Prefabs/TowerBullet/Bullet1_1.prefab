@@ -30,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -4.27212, y: -1.1814005, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 5
   m_Sprite: {fileID: 21300000, guid: ed4187367cb1f61499cc3cdefd26cc02, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -119,8 +119,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.09, y: 0.07}
+  m_Offset: {x: -0.0047421083, y: -0.0047420263}
+  m_Size: {x: 0.08051579, y: 0.08051579}
   m_Direction: 0
 --- !u!114 &257062579145005675
 MonoBehaviour:
@@ -134,6 +134,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be0ae35fc317f41458eb393d81c52295, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  splitType: 1
+  parabolaType: 1
+  splitBullet: {fileID: 5935609886693347102, guid: 829344a1fe3a6464086fac8b6e5133cb, type: 3}
+  bloodPrefabs: {fileID: 1395803125022593206, guid: acf116db2bcaf984eb409a0c49c364ad, type: 3}
+  limitPos: 0
 --- !u!50 &-2726596391065594025
 Rigidbody2D:
   serializedVersion: 4

@@ -9,10 +9,12 @@ public class TekiChar : CharBase
     public GameObject getGoldImage;
     public Text getGoldText;
     public int getGold;
+    public static int count;
     GameObject gold;
+
     private void Awake()
     {
-        
+        count++;
     }
 
     private void FixedUpdate()
@@ -20,30 +22,47 @@ public class TekiChar : CharBase
         Movement(charType.TEKI);
     }
 
-
+    protected IEnumerator TekiDeadAnimeCorutine()
+    {
+        rigid.simulated = false;
+        col.enabled = false;
+        isBattle = false;
+        isMove = false;
+        isLive = false;
+        hpBar.gameObject.SetActive(false);
+        anime.SetBool("Run", false);
+        anime.SetTrigger("Die");
+        yield return new WaitForSeconds(deadAnimeTimer);
+        GameManager.instance.baseCurrentExp += charKillXP;
+        GameManager.instance.currentGold += charKillGold;
+        Destroy(gold);
+        Destroy(gameObject);
+    }
 
     override protected void Update()
     {
-        if (currentHP <= 0 && isLive)
+        if (charCurrentHP <= 0 && isLive)
         {
+            anime.SetBool("Run", false);
             gold = Instantiate(getGoldImage, GameObject.Find("WorldCanvas").transform);
-            gold.transform.position = new Vector2(transform.position.x + 0.2f, transform.position.y);
+            gold.transform.position = new Vector2(transform.position.x, transform.position.y);
             getGoldText = getGoldImage.GetComponentInChildren<Text>();
-            getGoldText.text = getGold.ToString();
-            gold.transform.Translate(0f, 1f * Time.deltaTime, 0f);
-            if (gold.transform.position.y > -2.3f)
-            {
-                isLive = false;
-                Destroy(gold);
+            getGoldText.text = "+" + getGold + "g";
+            isBattle = false;
+            isMove = false;
 
-            }
+            StartCoroutine(TekiDeadAnimeCorutine());
         }
+        
+        if(gold != null)
+            gold.transform.Translate(0f, 0.8f * Time.deltaTime, 0f);
+
 
         if (UnitType == unitType.RANGE)
         {
             LayerMask lay = LayerMask.GetMask("Mikata");
 
-            var target = Physics2D.CircleCast(transform.position, attackRange, Vector2.zero, 0, lay);
+            var target = Physics2D.CircleCast(transform.position, charAttackRange, Vector2.zero, 0, lay);
             if (target)
             {
                 isBattle = true;
@@ -61,7 +80,7 @@ public class TekiChar : CharBase
             isBattle = true;
             isMove = false;
         }
-        else if (collision.collider.CompareTag("TekiChar"))
+        if (collision.collider.CompareTag("TekiChar"))
         {
             if (collision.transform.position.x < transform.position.x)
             {
@@ -82,12 +101,8 @@ public class TekiChar : CharBase
         }
         else if (collision.collider.CompareTag("TekiChar"))
         {
-            if (collision.transform.position.x < transform.position.x)
-            {
                 isMove = true;
                 anime.SetBool("Run", true);
-
-            }
         }
     }
 }

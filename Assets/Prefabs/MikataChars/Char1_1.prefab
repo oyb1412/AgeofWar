@@ -98,7 +98,7 @@ Animator:
   m_GameObject: {fileID: 7147799688451327549}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: bd14f78eb95373a438f043d4a2ff16e3, type: 2}
+  m_Controller: {fileID: 22100000, guid: c2679c58d62347140856657262a832d9, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -123,20 +123,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CharType: 0
   UnitType: 1
-  speed: 1
-  damage: 5
-  attackSpeed: 1
-  attackRange: 1.2
-  currentHP: 5
-  maxHP: 5
-  createTime: 1
-  useGold: 5
   isLive: 0
   isMove: 0
   isBattle: 0
   attackCol: {fileID: 0}
   bulletPrefabs: {fileID: 0}
   hpBarPrefabs: {fileID: 1494851717418582748, guid: a21fc51a90ec44744966317171d73e1e, type: 3}
+  hpBar: {fileID: 0}
+  mikataFrontCol: 0
+  mikataBackCol: 0
+  charId: 4
+  charName: 
+  charCost: 0
+  charTrainingTime: 0
+  charMaxHP: 0
+  charDamage: 0
+  charAttackSpeed: 0
+  charCurrentHP: 0
+  charAttackRange: 0
+  charMoveSpeed: 0
+  charAttackTimer: 0
+  skill2On: 0
   skill2Prefabs: {fileID: 4179384920257649292, guid: e509f684ecd41cd4ba65ba1f3180a4e5, type: 3}
 --- !u!61 &-1720614138252670946
 BoxCollider2D:
@@ -170,7 +177,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.05157277, y: -0.07915822}
+  m_Offset: {x: 0.044311173, y: -0.07915822}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.3388351, y: 0.6493551}
@@ -181,7 +188,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.32, y: 0.53}
+  m_Size: {x: 0.255306, y: 0.53}
   m_EdgeRadius: 0
 --- !u!50 &103069051358855290
 Rigidbody2D:

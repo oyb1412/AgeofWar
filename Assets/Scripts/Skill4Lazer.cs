@@ -22,7 +22,7 @@ public class Skill4Lazer : MonoBehaviour
             return;
 
         var target = collision.GetComponent<TekiChar>();
-        target.currentHP -= damage;
+        target.charCurrentHP -= damage;
     }
 
 }

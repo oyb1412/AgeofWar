@@ -19,9 +19,9 @@ public class SkillBullet : MonoBehaviour
 
         
         var target = collision.GetComponent<TekiChar>();
-        var pos = new Vector2(target.transform.position.x, -2.8f);
-        Instantiate(effectPrefabs, pos,Quaternion.identity);
-        target.currentHP -= damage;
+        var trans = Instantiate(effectPrefabs, null);
+        trans.transform.position = transform.position;
+        target.charCurrentHP -= damage;
         Destroy(gameObject);
     }
 }

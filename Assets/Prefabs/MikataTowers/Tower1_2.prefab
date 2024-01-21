@@ -100,15 +100,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   towerType: 0
-  attackTimer: 0
-  attackSpeed: 1
-  attackDamage: 1
+  splitType: 0
+  parabolaType: 0
+  towerAttackTimer: 0
   bulletSpeed: 10
-  attackRange: 15
+  towerName: 
+  towerSellCost: 0
+  towerId: 1
   moveDir: {x: 0, y: 0}
   bulletPrefabs: {fileID: 3660449120629941716, guid: 0b16d8f5044c6d046a9d5f82117f97e7, type: 3}
   charTarget: {fileID: 0}
-  towerSellGold: 50
 --- !u!95 &4825154207384887457
 Animator:
   serializedVersion: 5
@@ -119,7 +120,7 @@ Animator:
   m_GameObject: {fileID: 5140149160244517939}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: 48471f280c52a084584e52cd0b94d825, type: 2}
+  m_Controller: {fileID: 22100000, guid: 73fb4e5773bdb0e46a46927cec082e6e, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

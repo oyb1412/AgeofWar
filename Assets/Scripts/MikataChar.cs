@@ -6,7 +6,6 @@ using UnityEngine;
 public class MikataChar : CharBase
 {
     public bool skill2On;
-    public string charName;
     public GameObject skill2Prefabs;
     GameObject skill2Object;
     private void Awake()
@@ -25,18 +24,26 @@ public class MikataChar : CharBase
         {
             skill2Object.transform.position = new Vector2(transform.position.x, transform.position.y - 0.3f);
             skill2Object.SetActive(true);
-            currentHP += Time.deltaTime;
+            charCurrentHP += Time.deltaTime;
         }
         if (UnitType == unitType.RANGE)
         {
             LayerMask lay = LayerMask.GetMask("Teki");
-            var target = Physics2D.CircleCast(transform.position, attackRange, Vector2.zero, 0, lay);
+            var target = Physics2D.CircleCast(transform.position, charAttackRange, Vector2.zero, 0, lay);
             if (target)
             {
                 isBattle = true;
                 anime.SetBool("Run", false);
                 isMove = false;
             }
+        }
+
+        if (charCurrentHP <= 0 && isLive)
+        {
+            anime.SetBool("Run", false);
+            isBattle = false;
+            isMove = false;
+            StartCoroutine(DeadAnimeCorutine());
         }
         base.Update();
     }
@@ -46,17 +53,17 @@ public class MikataChar : CharBase
     {
         if(collision.collider.CompareTag("TekiChar") || collision.collider.CompareTag("TekiBase"))
         {
-            Debug.Log("Ãæµ¹ÇÔ");
             isBattle = true;
             isMove = false;
         }
-        else if(collision.collider.CompareTag("MikataChar"))
+        if(collision.collider.CompareTag("MikataChar"))
         {
             if(collision.transform.position.x > transform.position.x)
             {
                 isMove = false;
                 anime.SetBool("Run", false);
             }
+
         }
         
     }
@@ -71,12 +78,9 @@ public class MikataChar : CharBase
         }
         else if (collision.collider.CompareTag("MikataChar"))
         {
-            if (collision.transform.position.x > transform.position.x)
-            {
-                isMove = true;
-                anime.SetBool("Run", true);
+            isMove = true;
+            anime.SetBool("Run", true);
 
-            }
         }
     }
 }

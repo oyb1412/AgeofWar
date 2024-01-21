@@ -142,10 +142,10 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.03799501, y: -0.03955645}
+  m_Offset: {x: -0.013925545, y: -0.039556444}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.3914428, y: 0.5859923}
+    pivot: {x: 0.4, y: 0.5869565}
     oldSize: {x: 0.35, y: 0.46}
     newSize: {x: 0.35, y: 0.46}
     adaptiveTilingThreshold: 0.5
@@ -153,7 +153,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.35, y: 0.46000004}
+  m_Size: {x: 0.3018611, y: 0.46000004}
   m_EdgeRadius: 0
 --- !u!114 &-6188919698496316142
 MonoBehaviour:
@@ -169,14 +169,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CharType: 1
   UnitType: 0
-  speed: -1
-  damage: 2
-  attackSpeed: 1
-  attackRange: 0
-  currentHP: 5
-  maxHP: 5
-  createTime: 0
-  useGold: 0
   isLive: 0
   isMove: 0
   isBattle: 0
@@ -184,6 +176,19 @@ MonoBehaviour:
   bulletPrefabs: {fileID: 0}
   hpBarPrefabs: {fileID: 1494851717418582748, guid: a21fc51a90ec44744966317171d73e1e, type: 3}
   hpBar: {fileID: 0}
+  mikataFrontCol: 0
+  mikataBackCol: 0
+  charId: 0
+  charName: 
+  charCost: 0
+  charTrainingTime: 0
+  charMaxHP: 0
+  charDamage: 0
+  charAttackSpeed: 0
+  charCurrentHP: 0
+  charAttackRange: 0
+  charMoveSpeed: 0
+  charAttackTimer: 0
   getGoldImage: {fileID: 7372025579120412311, guid: 11b10f58ac8d8aa47bb8074fd6e3da38, type: 3}
   getGoldText: {fileID: 0}
   getGold: 5
@@ -225,7 +230,7 @@ GameObject:
   - component: {fileID: 6523900639381424620}
   - component: {fileID: 7658882141198057883}
   - component: {fileID: 920553849247176644}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: AttackCol
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -279,7 +284,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.29, y: -0.035929844}
+  m_Offset: {x: -0.22421013, y: -0.035929844}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -290,7 +295,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.13134134, y: 0.38707802}
+  m_Size: {x: 0.12171349, y: 0.38707802}
   m_EdgeRadius: 0
 --- !u!114 &920553849247176644
 MonoBehaviour:
@@ -304,3 +309,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2de13a0bc2528d14ab788131ce3b76b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bloodPrefab: {fileID: 1395803125022593206, guid: acf116db2bcaf984eb409a0c49c364ad, type: 3}

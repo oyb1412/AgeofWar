@@ -120,11 +120,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   towerType: 1
-  attackTimer: 0
-  attackSpeed: 1
-  attackDamage: 1
+  splitType: 1
+  parabolaType: 1
+  towerAttackTimer: 0
   bulletSpeed: 1
-  attackRange: 3
+  towerName: 
+  towerSellCost: 0
+  towerId: 4
   moveDir: {x: 0, y: 0}
   bulletPrefabs: {fileID: 5935609886693347102, guid: 62899f8d3d61ef54f8b1ea471cbf9169, type: 3}
   charTarget: {fileID: 0}

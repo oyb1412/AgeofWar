@@ -171,5 +171,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6343d2203102b094698ced33124e730c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 10
+  damage: 150
   effectPrefabs: {fileID: 1800264376187407991, guid: c12124f35bc34f84d83433c56a66bc77, type: 3}

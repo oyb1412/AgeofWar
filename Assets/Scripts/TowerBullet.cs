@@ -3,33 +3,52 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-
+using DG.Tweening;
 public class TowerBullet : MonoBehaviour
 {
     float damage;
     float speed;
     Rigidbody2D rigid;
     towerType bulletType;
-
+    public splitType splitType;
+    public parabolaType parabolaType;
+    public GameObject splitBullet;
+    public GameObject bloodPrefabs;
+    public float limitPos;
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
     }
-    public void Init(float attackDamage, float bulletSpeed, Vector2 moveDir, towerType towerType)
+    public void Init(float attackDamage, float bulletSpeed, Vector2 moveDir, towerType towerType, float x = 0f, float y = 0f)
     {
         damage = attackDamage;
         speed = bulletSpeed;
         bulletType = towerType;
-        rigid.velocity = moveDir * speed;
+        if (parabolaType == parabolaType.NORMAL)
+        {
+            limitPos = -4f;
+            rigid.velocity = moveDir * speed;
+        }
+        else
+        {
+            limitPos = y;
+            transform.DOMoveX(x, 3f).SetEase(Ease.OutQuad);
+            transform.DOMoveY(y, 2f).SetEase(Ease.InQuad);
+        }
     }
 
-    // Start is called before the first frame update
-  
+    private void Update()
+    {
+        if (transform.position.y < limitPos)
+            Destroy(gameObject);
+    }
+
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Tower"))
             return;
+
 
         switch(bulletType)
         {
@@ -37,7 +56,19 @@ public class TowerBullet : MonoBehaviour
                 if(collision.CompareTag("TekiChar"))
                 {
                     var target = collision.GetComponent<TekiChar>();
-                    target.currentHP -= damage;
+                    target.charCurrentHP -= damage;
+                    var trans = Instantiate(bloodPrefabs, null);
+                    trans.transform.position = target.transform.position;
+
+                    if (splitType == splitType.SPLIT)
+                    {
+                        for(int i = 0; i < 4; i++)
+                        {
+                            var tr = Instantiate(splitBullet, null);
+                            tr.transform.position = transform.position;
+                            tr.GetComponent<SpritBullet>().Init(damage, (int)towerType.MIKATA);
+                        }
+                    }
                     Destroy(gameObject);
                 }
                 break;
@@ -45,7 +76,19 @@ public class TowerBullet : MonoBehaviour
                 if (collision.CompareTag("MikataChar"))
                 {
                     var target = collision.GetComponent<MikataChar>();
-                    target.currentHP -= damage;
+                    target.charCurrentHP -= damage;
+                    var trans = Instantiate(bloodPrefabs, null);
+                    trans.transform.position = target.transform.position;
+                    if (splitType == splitType.SPLIT)
+                    {
+                        for (int i = 0; i < 4; i++)
+                        {
+                            var tr = Instantiate(splitBullet, null);
+                            tr.transform.position = transform.position;
+                            tr.GetComponent<SpritBullet>().Init(damage, (int)towerType.TEKI);
+
+                        }
+                    }
                     Destroy(gameObject);
                 }
                 break;

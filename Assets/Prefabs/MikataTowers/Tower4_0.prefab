@@ -100,15 +100,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   towerType: 0
-  attackTimer: 0
-  attackSpeed: 1
-  attackDamage: 1
+  splitType: 0
+  parabolaType: 0
+  towerAttackTimer: 0
   bulletSpeed: 10
-  attackRange: 15
+  towerName: 
+  towerSellCost: 0
+  towerId: 12
   moveDir: {x: 0, y: 0}
   bulletPrefabs: {fileID: 8947712024388255350, guid: 41af29b193ac9ef4f8df2d27ec915b11, type: 3}
   charTarget: {fileID: 0}
-  towerSellGold: 50
 --- !u!95 &6237264969458667287
 Animator:
   serializedVersion: 5

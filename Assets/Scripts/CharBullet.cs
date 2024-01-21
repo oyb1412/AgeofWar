@@ -6,6 +6,7 @@ public class CharBullet : MonoBehaviour
 {
     int type;
     float damage;
+    public GameObject bloodPrefab;
     // Start is called before the first frame update
     void Start()
     {
@@ -31,7 +32,9 @@ public class CharBullet : MonoBehaviour
                 {
                     Debug.Log("1");
                     var target = collision.GetComponent<TekiChar>();
-                    target.currentHP -= damage;
+                    target.charCurrentHP -= damage;
+                    var trans = Instantiate(bloodPrefab, null).transform;
+                    trans.position = target.transform.position;
                     Destroy(gameObject);
                 }
                 break;
@@ -39,7 +42,9 @@ public class CharBullet : MonoBehaviour
                 if (collision.CompareTag("MikataChar"))
                 {
                     var target = collision.GetComponent<MikataChar>();
-                    target.currentHP -= damage;
+                    target.charCurrentHP -= damage;
+                    var trans = Instantiate(bloodPrefab, null).transform;
+                    trans.position = target.transform.position;
                     Destroy(gameObject);
                 }
                 break;

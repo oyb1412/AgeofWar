@@ -10,13 +10,13 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using static UnityEngine.GraphicsBuffer;
 using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
+using Unity.Burst.CompilerServices;
 public class UiManager : MonoBehaviour
 {
     [Header("Other")]
     public float currentCreateTime;
     public int createBlockCount;
     public int createBlockMaxCount;
-    bool isCreate;
 
     [Header("Text")]
     public Text titleText;
@@ -39,6 +39,7 @@ public class UiManager : MonoBehaviour
     public GameObject selectMainPanel;
     public GameObject mouseOnPrefab;
     public GameObject towerSellImage;
+    bool isCreate;
 
     [Header("Slider")]
     public Slider createBar;
@@ -54,20 +55,36 @@ public class UiManager : MonoBehaviour
     CharBase mikata;
     CharBase teki;
     SpriteRenderer[] save;
+    SpriteRenderer saveSell;
+
+
+ 
+    [System.Serializable]
+    public class Factory
+    {
+        public GameManager.Chars chars;
+        public int index;
+        public int num;
+        public float createTime;
+    }
+
+    public Factory[] factory;
 
     private void Start()
     {
         towerSellImage.SetActive(false);
         mouseOnPrefab.SetActive(false);
         save = new SpriteRenderer[4];
+        for(int i = 0;i<factory.Length; i++)
+        {
+            factory[i].chars.charArray = new CharBase[3];
+        }
     }
     private void Update()
     {
-        if (isCreate)
-            currentCreateTime += Time.deltaTime;
-
         CharHpBarOnOff("MikataChar");
         CharHpBarOnOff("TekiChar");
+        CreateUnitFactorySystem();
     }
     void CharHpBarOnOff(string tag)
     {
@@ -111,73 +128,93 @@ public class UiManager : MonoBehaviour
 
     public void CreateUnit0Btn(int index)
     {
-        if (GameManager.instance.currentGold >= GameManager.instance.chars2[index].buyGold[0])
+        if (GameManager.instance.currentGold >= GameManager.instance.charClassArray[index].charArray[0].charCost)
         {
+
             if (createBlockCount < createBlockMaxCount)
             {
-                createBlock[createBlockCount].SetActive(true);
-                switch(createBlockCount)
-                {
-                    case 0:
-                        break;
-                }
+
                 createBlockCount++;
-                isCreate = true;
-                StartCoroutine(CreateUnit(GameManager.instance.chars2[index].createTime[0], index, 0));
+                createBlock[createBlockCount-1].SetActive(true);
+
+                if (GameManager.instance.charClassArray[index].charArray.Length > 0)
+                    factory[createBlockCount - 1].chars.charArray = GameManager.instance.charClassArray[index].charArray;
+
+                factory[createBlockCount - 1].index = index;
+                factory[createBlockCount - 1].num = 0;
+                factory[createBlockCount - 1].createTime = GameManager.instance.charClassArray[index].charArray[0].charTrainingTime;
+                GameManager.instance.currentGold -= GameManager.instance.charClassArray[index].charArray[0].charCost;
             }
         }
     }
-    IEnumerator CreateUnit(float createtime, int index, int unitnum)
+ 
+    void CreateUnitFactorySystem()
     {
-        GameManager.instance.currentGold -= GameManager.instance.chars2[index].buyGold[unitnum];
-
-        while (true)
+        if (createBlockCount > 0 && factory[0] != null)
         {
-            createBar.value = currentCreateTime / createtime;
-            yield return null;
+            currentCreateTime += Time.deltaTime;
+            createBar.value = currentCreateTime / factory[0].createTime;
             if (createBar.value >= 1f)
             {
-                var unit = Instantiate(GameManager.instance.chars2[index].chars1[unitnum]).transform;
+                var unit = Instantiate(factory[0].chars.charArray[factory[0].num]).transform;
                 unit.position = transform.position;
                 currentCreateTime = 0f;
                 createBar.value = 0f;
+
+                for (int i = 1; i < createBlockCount; i++)
+                {
+                    factory[i - 1] = factory[i];
+                    factory[i] = null;
+                }
                 createBlockCount--;
                 createBlock[createBlockCount].SetActive(false);
 
+                if (createBlockCount == 0 && factory[0] != null)
+                    factory[0] = null;
             }
 
-            if (createBlockCount < 1)
-            {
-                isCreate = false;
-                break;
-            }
+
         }
+
     }
-
-
     public void CreateUnit1Btn(int index)
     {
-        if (GameManager.instance.currentGold >= GameManager.instance.chars2[index].buyGold[1])
+        if (GameManager.instance.currentGold >= GameManager.instance.charClassArray[index].charArray[1].charCost)
         {
             if (createBlockCount < createBlockMaxCount)
             {
-                createBlock[createBlockCount].SetActive(true);
                 createBlockCount++;
-                isCreate = true;
-                StartCoroutine(CreateUnit(GameManager.instance.chars2[index].createTime[1], index, 1));
+
+                createBlock[createBlockCount-1].SetActive(true);
+ 
+                if (GameManager.instance.charClassArray[index].charArray.Length > 0)
+                    factory[createBlockCount - 1].chars.charArray = GameManager.instance.charClassArray[index].charArray;
+                factory[createBlockCount - 1].index = index;
+                factory[createBlockCount - 1].num = 1;
+                factory[createBlockCount - 1].createTime = GameManager.instance.charClassArray[index].charArray[1].charTrainingTime;
+                GameManager.instance.currentGold -= GameManager.instance.charClassArray[index].charArray[1].charCost;
+
             }
         }
     }    
     public void CreateUnit2Btn(int index)
     {
-        if (GameManager.instance.currentGold >= GameManager.instance.chars2[index].buyGold[2])
+        if (GameManager.instance.currentGold >= GameManager.instance.charClassArray[index].charArray[2].charCost)
         {
             if (createBlockCount < createBlockMaxCount)
             {
-                createBlock[createBlockCount].SetActive(true);
                 createBlockCount++;
-                isCreate = true;
-                StartCoroutine(CreateUnit(GameManager.instance.chars2[index].createTime[2], index, 2));
+
+                createBlock[createBlockCount-1].SetActive(true);
+  
+                if (GameManager.instance.charClassArray[index].charArray.Length > 0)
+                    factory[createBlockCount - 1].chars.charArray = GameManager.instance.charClassArray[index].charArray;
+
+                factory[createBlockCount - 1].index = index;
+                factory[createBlockCount - 1].num = 2;
+                factory[createBlockCount - 1].createTime = GameManager.instance.charClassArray[index].charArray[2].charTrainingTime;
+                GameManager.instance.currentGold -= GameManager.instance.charClassArray[index].charArray[2].charCost;
+
             }
         }
     }
@@ -189,22 +226,26 @@ public class UiManager : MonoBehaviour
 
     void MouseOn(Collider2D tag, int index)
     {
+      
+            if (tag)
+            {
+                 if (!tag.GetComponent<TowerFrame>().isUse)
+                 {
+                     save[index] = tag.GetComponentsInChildren<SpriteRenderer>()[1];
+                     save[index].gameObject.transform.localScale = new Vector2(2f, 2f);
+                 }
+            }
+            else if (save[index])
+                save[index].gameObject.transform.localScale = Vector2.zero;
         
-        if (tag)
-        {
-            save[index] = tag.GetComponentsInChildren<SpriteRenderer>()[1];
-            save[index].gameObject.transform.localScale = new Vector2(2f, 2f);
-        }
-        else if (save[index])
-            save[index].gameObject.transform.localScale = Vector2.zero;
     }
 
 
     IEnumerator TowerCreateCorutine(int index, int num)
     {
         var btn = EventSystem.current.currentSelectedGameObject.GetComponent<TowerButton>();
-        mouseOnPrefab.GetComponent<Image>().sprite = btn.towerImage;
-        mouseOnPrefab.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.7f);
+        mouseOnPrefab.GetComponent<SpriteRenderer>().sprite = btn.towerImage;
+        mouseOnPrefab.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0.7f);
         while (true)
         {
             var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -310,16 +351,28 @@ public class UiManager : MonoBehaviour
             towerSellImage.transform.position = new Vector3(mousePos.x, mousePos.y, 0f);
             towerSellImage.SetActive(true);
 
-            var tower = GameManager.MouseRayCast("Tower");
-            if (tower)
-            {
-                var target = GameManager.MouseRayCast("Tower").GetComponent<Tower>();
-                towerSellText.text = target.towerSellGold.ToString();
+            var tower =  Physics2D.RaycastAll(mousePos, Vector2.zero, 0f, LayerMask.GetMask("Tower"));
+            var fraems = Physics2D.CircleCast(mousePos, 0.1f, Vector2.zero, 0, LayerMask.GetMask("TowerFrame"));
 
- 
+                if(fraems)
+                {
+                    saveSell = fraems.transform.GetComponentsInChildren<SpriteRenderer>()[1];
+                    saveSell.gameObject.transform.localScale = new Vector2(2f, 2f);
+
+                }
+                else if(saveSell)
+                    saveSell.gameObject.transform.localScale = Vector2.zero;
+
+            if (tower.Length > 0)
+            {
+                var target = Physics2D.RaycastAll(mousePos, Vector2.zero, 0f, LayerMask.GetMask("Tower"));
+                var targetTower = target[0].transform.GetComponent<Tower>();
+                towerSellText.text = targetTower.towerSellCost.ToString();
+
+
+
                 if (Input.GetMouseButtonDown(0))
                 {
-                    var fraems = Physics2D.CircleCast(target.transform.position, 0.1f, Vector2.zero, 0,LayerMask.GetMask("TowerFrame"));
                     
                     if (fraems)
                     {
@@ -327,10 +380,11 @@ public class UiManager : MonoBehaviour
                         on.isUse = false;
                     }
                   
-                    GameManager.instance.currentGold += target.towerSellGold;
+                    GameManager.instance.currentGold += targetTower.towerSellCost;
                     GameManager.instance.mikataBase.currentTowerCount--;
-                    Destroy(target.gameObject);
+                    Destroy(targetTower.gameObject);
                     towerSellImage.SetActive(false);
+                    saveSell.gameObject.transform.localScale = Vector2.zero;
                     break;
                 }
             }
@@ -342,9 +396,11 @@ public class UiManager : MonoBehaviour
             if (Input.GetMouseButtonDown(1))
             {
                 towerSellImage.SetActive(false);
+                saveSell.gameObject.transform.localScale = Vector2.zero;
                 break;
             }
             yield return null;
+
         }
     }
     public void CreateTower1Btn(int index)
@@ -439,7 +495,7 @@ public class UiManager : MonoBehaviour
             skill0Count++;
 
             yield return new WaitForSeconds(0.3f);
-            if (skill0Count > 15)
+            if (skill0Count > 30)
             {
                 skill0Count = 0;
                 break;

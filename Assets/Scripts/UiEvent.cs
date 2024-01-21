@@ -9,12 +9,6 @@ public class UiEvent : MonoBehaviour
     , IPointerExitHandler
 {
     GameObject data;
-    public static UiEvent instance;
-
-    private void Awake()
-    {
-        instance = this;
-    }
 
     public void OnPointerEnter(PointerEventData eventData)
     {

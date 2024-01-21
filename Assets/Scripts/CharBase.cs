@@ -10,35 +10,46 @@ public class CharBase : MonoBehaviour
     [Header("--BaseInfo")]
     public charType CharType;
     public unitType UnitType;
-    public float speed;
-    public float damage;
-    public float attackSpeed;
-    public float attackRange;
-    protected float attackTimer;
-    public float currentHP;
-    public float maxHP;
-    public float createTime;
-    float deadAnimeTimer = 0.8f;
+    protected float deadAnimeTimer = 0.8f;
     float attackColTimer = 0.1f;
-    public int useGold;
     public bool isLive;
     public bool isMove;
     public bool isBattle;
     protected Animator anime;
     public Collider2D attackCol;
-    Collider2D col;
-    Rigidbody2D rigid;
+    protected Collider2D col;
+    protected Rigidbody2D rigid;
     public GameObject bulletPrefabs;
+    
     public Slider hpBarPrefabs;
     public Slider hpBar;
 
+    [Header("CharBehavior")]
+    public bool mikataFrontCol;
+    public bool mikataBackCol;
+
+
+    [Header("CharInfo")]
+    public int charId;
+    public string charName;
+    public int charCost;
+    public float charTrainingTime;
+    public float charMaxHP;
+    public float charDamage;
+    public float charAttackSpeed;
+    public float charCurrentHP;
+    public float charAttackRange;
+    public float charMoveSpeed;
+    public float charAttackTimer;
+    public float charKillXP;
+    public float charKillGold;
     // Start is called before the first frame update
     protected void Start()
     {
+        CharInit();
         anime = GetComponent<Animator>();
         col = GetComponent<Collider2D>();
         rigid = GetComponent<Rigidbody2D>();
-        currentHP = maxHP;
         isLive = true;
         isMove = true;
         if (UnitType == unitType.MELEE)
@@ -49,31 +60,53 @@ public class CharBase : MonoBehaviour
         hpBar = Instantiate(hpBarPrefabs, GameObject.Find("WorldCanvas").transform);
         hpBar.gameObject.SetActive(false);
     }
+    void CharInit()
+    {
+        var data = GameManager.instance.data;
+        charName = data.charName[charId];
+        charCost = data.charCost[charId];
+        charTrainingTime = data.charTraningTime[charId];
+        charMaxHP = data.charMaxHP[charId];
+        charCurrentHP = charMaxHP;
+        charDamage = data.charDamGE[charId];
+        if (CharType == charType.TEKI)
+        {
+            charMoveSpeed = -1 * data.charMoveSpeed;
+            charKillGold = data.tekiCharKillGold[charId];
+            charKillXP = charKillGold * 2;
+        }
+        else
+            charMoveSpeed = data.charMoveSpeed;
+
+        charAttackRange = data.charAttackRange;
+        if(UnitType == unitType.MELEE)
+        {
+            charAttackSpeed = data.charMeleeAttackSpeed[charId];
+        }
+        else
+        {
+            charAttackSpeed = data.charRangeAttackSpeed[charId];
+        }
+    }
 
     virtual protected void Update()
     {
         if (isBattle)
         {
             anime.SetBool("Run", false);
-            attackTimer += Time.deltaTime;
-            if (attackTimer > attackSpeed)
+            charAttackTimer += Time.deltaTime;
+            if (charAttackTimer > charAttackSpeed)
             {
                 anime.SetTrigger("Attack");
-                attackTimer = 0;
+                charAttackTimer = 0;
             }
         }
 
-        if (currentHP <= 0)
-        {
-            anime.SetBool("Run", false);
-            isBattle = false;
-            isMove = false;
-            StartCoroutine(DeadAnimeCorutine());
-        }
+
         hpBar.GetComponent<RectTransform>().transform.position = new Vector2(transform.position.x, transform.position.y + 0.6f);
-        if (currentHP < maxHP)
+        if (charCurrentHP < charMaxHP)
         {
-            hpBar.value = currentHP / maxHP;
+            hpBar.value = charCurrentHP / charMaxHP;
         }
     }
     public void OnMeleeCol()
@@ -87,11 +120,11 @@ public class CharBase : MonoBehaviour
         switch(CharType)
         {
             case charType.MIKATA:
-                bullet.GetComponent<CharBullet>().Init(damage, (int)charType.MIKATA);
+                bullet.GetComponent<CharBullet>().Init(charDamage, (int)charType.MIKATA);
 
                 break;
             case charType.TEKI:
-                bullet.GetComponent<CharBullet>().Init(damage, (int)charType.TEKI);
+                bullet.GetComponent<CharBullet>().Init(charDamage, (int)charType.TEKI);
 
                 break;
         }
@@ -103,12 +136,13 @@ public class CharBase : MonoBehaviour
         attackCol.enabled = false;
     }
 
-    IEnumerator DeadAnimeCorutine()
+    protected IEnumerator DeadAnimeCorutine()
     {
         rigid.simulated = false;
         col.enabled = false;
         isBattle = false;
         isMove = false;
+        isLive = false;
         hpBar.gameObject.SetActive(false);
         anime.SetBool("Run", false);
         anime.SetTrigger("Die");
@@ -122,8 +156,9 @@ public class CharBase : MonoBehaviour
         if (!isMove)
             return;
 
-        anime.SetBool("Run", true);
-        transform.Translate(speed * Time.fixedDeltaTime, 0f, 0f);
+            anime.SetBool("Run", true);
+            transform.Translate(charMoveSpeed * Time.fixedDeltaTime, 0f, 0f);
+        
     }
 
 
