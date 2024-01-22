@@ -134,9 +134,9 @@ MonoBehaviour:
   mikataFrontCol: 0
   mikataBackCol: 0
   charId: 0
-  charName: 
+  charName: clubman
   charCost: 15
-  charTrainingTime: 2
+  charTrainingTime: 1
   charMaxHP: 0
   charDamage: 0
   charAttackSpeed: 0
@@ -144,6 +144,8 @@ MonoBehaviour:
   charAttackRange: 0
   charMoveSpeed: 0
   charAttackTimer: 0
+  charKillXP: 0
+  charKillGold: 0
   skill2On: 0
   skill2Prefabs: {fileID: 4179384920257649292, guid: e509f684ecd41cd4ba65ba1f3180a4e5, type: 3}
 --- !u!61 &7450214991416401469
@@ -178,7 +180,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.016905323, y: -0.039556444}
+  m_Offset: {x: 0.016, y: -0.039556444}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.4, y: 0.5869565}
@@ -189,7 +191,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.30782065, y: 0.46000004}
+  m_Size: {x: 0.3, y: 0.46000004}
   m_EdgeRadius: 0
 --- !u!50 &-1425159876376998186
 Rigidbody2D:

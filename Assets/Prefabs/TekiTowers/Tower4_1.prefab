@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3939458471181053503}
   - component: {fileID: 2449054382175086490}
   - component: {fileID: -1300101415441014464}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Tower4_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: -2, y: 2, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -75,12 +75,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: 696220a074c50ac409cfd365beb84d35, type: 3}
+  m_Sprite: {fileID: -40412765, guid: 696220a074c50ac409cfd365beb84d35, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.36, y: 0.24}
+  m_Size: {x: 0.22, y: 0.16}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -119,13 +119,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9a2c64b8809dcc4db157e9d001b27f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  towerType: 1
+  towerType: 0
   splitType: 0
   parabolaType: 0
   towerAttackTimer: 0
   bulletSpeed: 1
   towerName: 
+  towerCost: 0
   towerSellCost: 0
+  towerAttackSpeed: 0
+  towerAttackDamage: 0
+  towerAttackRange: 0
   towerId: 13
   moveDir: {x: 0, y: 0}
   bulletPrefabs: {fileID: 6682891706505954923, guid: 66b3f146cedf412408d7f1bdee5c9591, type: 3}

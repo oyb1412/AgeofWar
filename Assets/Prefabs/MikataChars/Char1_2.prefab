@@ -65,7 +65,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.5744555, y: -0.039626986}
+  m_Offset: {x: 0.5446415, y: -0.039626986}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -76,7 +76,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.22843409, y: 0.58125573}
+  m_Size: {x: 0.16880614, y: 0.58125573}
   m_EdgeRadius: 0
 --- !u!114 &99203759901618807
 MonoBehaviour:
@@ -225,9 +225,9 @@ MonoBehaviour:
   mikataFrontCol: 0
   mikataBackCol: 0
   charId: 5
-  charName: 
-  charCost: 0
-  charTrainingTime: 0
+  charName: knight
+  charCost: 500
+  charTrainingTime: 2.5
   charMaxHP: 0
   charDamage: 0
   charAttackSpeed: 0
@@ -235,6 +235,8 @@ MonoBehaviour:
   charAttackRange: 0
   charMoveSpeed: 0
   charAttackTimer: 0
+  charKillXP: 0
+  charKillGold: 0
   skill2On: 0
   skill2Prefabs: {fileID: 4179384920257649292, guid: e509f684ecd41cd4ba65ba1f3180a4e5, type: 3}
 --- !u!61 &499697474991547033

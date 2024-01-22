@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public Data data;
     public CameraMovemnet mainCamera;
+    public AudioManager audioManager;
     [Header("--MikataBaseInfo--")]
     public int maxTowerFrameCount = 4;
     public int maxTowerCount = 3;
@@ -31,8 +32,8 @@ public class GameManager : MonoBehaviour
     public class Towers
     {
         public GameObject[] tower;
-        public int[] buyGold;
-        public int[] sellGold;
+        public float[] buyGold;
+        public float[] sellGold;
     }
 
     [System.Serializable]
@@ -77,7 +78,6 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     private void Awake()
     {
-        Init();
         if (instance != null)
         {
             Destroy(gameObject);
@@ -88,7 +88,11 @@ public class GameManager : MonoBehaviour
         }
 
     }
+    private void Start()
+    {
+        Init();
 
+    }
     void Init()
     {
         baseMaxHp = data.base_hp;
@@ -105,7 +109,6 @@ public class GameManager : MonoBehaviour
         tekiBase.baseObj = Instantiate(tekiBase.BasePrefab[tekiBase.currentLevel], null);
         tekiBase.currentHp = baseMaxHp[0];
 
-        tekiBase.baseObj.GetComponent<SpriteRenderer>().flipX = true;
         tekiBase.baseObj.transform.position = new Vector3(13f, -2.1f, 0f);
         for (int i = 0; i < maxTowerCount; i++)
         {
@@ -113,6 +116,17 @@ public class GameManager : MonoBehaviour
             tekiBase.towerFrame[i] = tekiBase.baseObj.transform.GetChild(i).gameObject;
         }
         mikataBase.currentTowerFrameCount = 1;
+
+        int count = 0;
+        for(int i = 0;i < towers.Length; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                towers[i].buyGold[j] = data.turret_cost[count];
+                towers[i].sellGold[j] = towers[i].buyGold[j] * 0.7f;
+                    count++;
+            }
+        }
 
     }
     public void TowerFrameAddClick()
@@ -136,9 +150,11 @@ public class GameManager : MonoBehaviour
             if (mikataBase.currentLevel < baseMaxLevel)
             {
                 mikataBase.currentLevel++;
- 
+                var percent = mikataBase.currentHp / baseMaxHp[mikataBase.currentLevel];
+
                 Destroy(mikataBase.baseObj);
                 mikataBase.baseObj = Instantiate(mikataBase.BasePrefab[mikataBase.currentLevel], null);
+                mikataBase.currentHp = mikataBase.currentHp * percent;
                 if (mikataBase.currentTowerFrameCount == 2)
                     mikataBase.towerFrame[1].SetActive(true);
                 if (mikataBase.currentTowerFrameCount == 3)

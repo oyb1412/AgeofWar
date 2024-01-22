@@ -103,12 +103,16 @@ MonoBehaviour:
   splitType: 0
   parabolaType: 0
   towerAttackTimer: 0
-  bulletSpeed: 10
+  bulletSpeed: 25
   towerName: 
+  towerCost: 0
   towerSellCost: 0
+  towerAttackSpeed: 0
+  towerAttackDamage: 0
+  towerAttackRange: 0
   towerId: 9
   moveDir: {x: 0, y: 0}
-  bulletPrefabs: {fileID: 1868350792307780153, guid: 0954a13eeacebbe48a66ca6f9ef62e63, type: 3}
+  bulletPrefabs: {fileID: 283414840306764910, guid: cad4f313a4c4f0647ba15912bfc45254, type: 3}
   charTarget: {fileID: 0}
 --- !u!95 &-1795379343732160007
 Animator:

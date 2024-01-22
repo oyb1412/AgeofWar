@@ -75,10 +75,6 @@ public class UiManager : MonoBehaviour
         towerSellImage.SetActive(false);
         mouseOnPrefab.SetActive(false);
         save = new SpriteRenderer[4];
-        for(int i = 0;i<factory.Length; i++)
-        {
-            factory[i].chars.charArray = new CharBase[3];
-        }
     }
     private void Update()
     {
@@ -154,23 +150,22 @@ public class UiManager : MonoBehaviour
         {
             currentCreateTime += Time.deltaTime;
             createBar.value = currentCreateTime / factory[0].createTime;
+            createText.text = "Traning to " +factory[0].chars.charArray[factory[0].num].charName + "...";
             if (createBar.value >= 1f)
             {
-                var unit = Instantiate(factory[0].chars.charArray[factory[0].num]).transform;
+                var unit = Instantiate(factory[0].chars.charArray[factory[0].num],null).transform;
                 unit.position = transform.position;
                 currentCreateTime = 0f;
                 createBar.value = 0f;
+                createText.text = "";
 
                 for (int i = 1; i < createBlockCount; i++)
                 {
                     factory[i - 1] = factory[i];
-                    factory[i] = null;
                 }
                 createBlockCount--;
                 createBlock[createBlockCount].SetActive(false);
 
-                if (createBlockCount == 0 && factory[0] != null)
-                    factory[0] = null;
             }
 
 

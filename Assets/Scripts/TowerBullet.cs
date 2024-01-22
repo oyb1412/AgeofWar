@@ -32,8 +32,8 @@ public class TowerBullet : MonoBehaviour
         else
         {
             limitPos = y;
-            transform.DOMoveX(x, 3f).SetEase(Ease.OutQuad);
-            transform.DOMoveY(y, 2f).SetEase(Ease.InQuad);
+            transform.DOMoveX(x, 1.5f).SetEase(Ease.OutQuad);
+            transform.DOMoveY(y, 1f).SetEase(Ease.InQuad);
         }
     }
 

@@ -65,7 +65,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.36981106, y: -0.039626986}
+  m_Offset: {x: 0.3509065, y: -0.039626986}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -76,7 +76,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.17558363, y: 0.58125573}
+  m_Size: {x: 0.13777447, y: 0.58125573}
   m_EdgeRadius: 0
 --- !u!114 &9009907362809498766
 MonoBehaviour:
@@ -225,8 +225,8 @@ MonoBehaviour:
   mikataFrontCol: 0
   mikataBackCol: 0
   charId: 6
-  charName: 
-  charCost: 0
+  charName: dueler
+  charCost: 200
   charTrainingTime: 0
   charMaxHP: 0
   charDamage: 0
@@ -235,6 +235,8 @@ MonoBehaviour:
   charAttackRange: 0
   charMoveSpeed: 0
   charAttackTimer: 0
+  charKillXP: 0
+  charKillGold: 0
   skill2On: 0
   skill2Prefabs: {fileID: 4179384920257649292, guid: e509f684ecd41cd4ba65ba1f3180a4e5, type: 3}
 --- !u!61 &-147510166437164267
@@ -269,7 +271,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.0506714, y: -0.03808555}
+  m_Offset: {x: 0.016, y: -0.03808555}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.2967792, y: 0.5577054}
@@ -280,7 +282,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.46341354, y: 0.66}
+  m_Size: {x: 0.3, y: 0.66}
   m_EdgeRadius: 0
 --- !u!50 &-5166100146098083447
 Rigidbody2D:

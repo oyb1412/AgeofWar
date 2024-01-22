@@ -35,6 +35,7 @@ public class TekiChar : CharBase
         yield return new WaitForSeconds(deadAnimeTimer);
         GameManager.instance.baseCurrentExp += charKillXP;
         GameManager.instance.currentGold += charKillGold;
+        count--;
         Destroy(gold);
         Destroy(gameObject);
     }

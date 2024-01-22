@@ -65,7 +65,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.25363308, y: -0.08599396}
+  m_Offset: {x: 0.2005381, y: -0.08599396}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -76,7 +76,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.30091548, y: 0.475274}
+  m_Size: {x: 0.19472551, y: 0.475274}
   m_EdgeRadius: 0
 --- !u!114 &3097646169835073511
 MonoBehaviour:
@@ -122,7 +122,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2056922140509812488}
@@ -225,9 +225,9 @@ MonoBehaviour:
   mikataFrontCol: 0
   mikataBackCol: 0
   charId: 12
-  charName: 
-  charCost: 0
-  charTrainingTime: 0
+  charName: godblade
+  charCost: 5000
+  charTrainingTime: 2.5
   charMaxHP: 0
   charDamage: 0
   charAttackSpeed: 0
@@ -235,6 +235,8 @@ MonoBehaviour:
   charAttackRange: 0
   charMoveSpeed: 0
   charAttackTimer: 0
+  charKillXP: 0
+  charKillGold: 0
   skill2On: 0
   skill2Prefabs: {fileID: 4179384920257649292, guid: e509f684ecd41cd4ba65ba1f3180a4e5, type: 3}
 --- !u!61 &-6074009782549428456
@@ -269,7 +271,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.034494206, y: 0.061552376}
+  m_Offset: {x: -0.04, y: 0.061552376}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.7452011, y: 0.4230595}
@@ -280,7 +282,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.3480012, y: 0.8}
+  m_Size: {x: 0.3, y: 0.8}
   m_EdgeRadius: 0
 --- !u!50 &-5713199120518294614
 Rigidbody2D:

@@ -24,17 +24,23 @@ public class MikataChar : CharBase
         {
             skill2Object.transform.position = new Vector2(transform.position.x, transform.position.y - 0.3f);
             skill2Object.SetActive(true);
-            charCurrentHP += Time.deltaTime;
+            charCurrentHP += Time.deltaTime * 5f;
         }
         if (UnitType == unitType.RANGE)
         {
-            LayerMask lay = LayerMask.GetMask("Teki");
-            var target = Physics2D.CircleCast(transform.position, charAttackRange, Vector2.zero, 0, lay);
+            var target = Physics2D.CircleCast(transform.position, charAttackRange, Vector2.zero, 0, LayerMask.GetMask("Teki"));
             if (target)
             {
                 isBattle = true;
-                anime.SetBool("Run", false);
                 isMove = false;
+                anime.SetBool("Run", false);
+            }
+            else
+            {
+                isBattle = false;
+                isMove = true;
+                anime.SetBool("Run", true);
+
             }
         }
 

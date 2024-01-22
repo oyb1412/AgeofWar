@@ -12,11 +12,11 @@ public class Tower : MonoBehaviour
     public float towerAttackTimer;
     public float bulletSpeed;
     public string towerName;
-    private float towerCost;
+    public float towerCost;
     public float towerSellCost;
-    private float towerAttackSpeed;
-    private float towerAttackDamage;
-    private float towerAttackRange;
+    public float towerAttackSpeed;
+    public float towerAttackDamage;
+    public float towerAttackRange;
     public int towerId;
     public Vector2 moveDir;
     public GameObject bulletPrefabs;
@@ -36,7 +36,7 @@ public class Tower : MonoBehaviour
         towerCost = data.turret_cost[towerId];
         towerAttackSpeed = data.turret_speed[towerId];
         towerAttackDamage = data.turret_damage[towerId];
-        towerAttackRange = data.turret_range[towerId];
+        towerAttackRange = data.towerAttackRange[towerId];
         towerSellCost = towerCost * 0.7f;
     }
     // Update is called once per frame
@@ -70,7 +70,7 @@ public class Tower : MonoBehaviour
                 {
                     for (int j = 0; j < type1.Length - 1; j++)
                     {
-                        if (type1[j].transform.position.x - transform.position.x > type1[j + 1].transform.position.x - transform.position.x)
+                        if (transform.position.x - type1[j].transform.position.x > transform.position.x - type1[j + 1].transform.position.x )
                         {
                             var save = type1[j];
                             type1[j] = type1[j + 1];
@@ -81,7 +81,7 @@ public class Tower : MonoBehaviour
                 if (type1.Length > 0)
                 {
                     if (type1[0].transform.position.x - transform.position.x < towerAttackRange)
-                        charTarget = target.transform.GetComponent<MikataChar>();
+                        charTarget = type1[0].transform.GetComponent<MikataChar>();
                 }
                 break;
                 
@@ -93,10 +93,19 @@ public class Tower : MonoBehaviour
 
             if (towerAttackTimer > towerAttackSpeed)
             {
-                var angle = Mathf.Atan2(charTarget.transform.position.y - transform.position.y, charTarget.transform.position.x - transform.position.x) * Mathf.Rad2Deg;
+                float angle;
+                if(towerType == towerType.MIKATA)
+                    angle = Mathf.Atan2(charTarget.transform.position.y - transform.position.y, charTarget.transform.position.x - transform.position.x) * Mathf.Rad2Deg;
+                else
+                    angle = Mathf.Atan2(transform.position.y - charTarget.transform.position.y, transform.position.x - charTarget.transform.position.x) * Mathf.Rad2Deg;
+
+                angle = Mathf.Clamp(angle, 0, 70f);
                 transform.rotation = Quaternion.Euler(0, 0, angle);
-                anime.SetTrigger("Attack");
-                moveDir = (charTarget.transform.position - transform.position).normalized;
+                if (angle > 0 && angle < 70f)
+                {
+                    anime.SetTrigger("Attack");
+                    moveDir = (charTarget.transform.position - transform.position).normalized;
+                }
                 towerAttackTimer = 0;
             }
         }
@@ -105,11 +114,18 @@ public class Tower : MonoBehaviour
     public void OnTowerAttack()
     {
         var bullet = Instantiate(bulletPrefabs, transform);
-        bullet.transform.position = transform.position;
-        if (splitType == splitType.SPLIT)
-            bullet.GetComponent<TowerBullet>().Init(towerAttackDamage, bulletSpeed, moveDir, towerType, charTarget.transform.position.x, charTarget.transform.position.y);
-        else
-            bullet.GetComponent<TowerBullet>().Init(towerAttackDamage, bulletSpeed, moveDir, towerType);
-
+        if (charTarget)
+        {
+            if (parabolaType == parabolaType.PARABOLA)
+            {
+                bullet.GetComponent<TowerBullet>().Init(towerAttackDamage, bulletSpeed, moveDir, towerType, charTarget.transform.position.x, charTarget.transform.position.y);
+                bullet.transform.position = new Vector3(transform.position.x, transform.position.y + 0.3f, 0f);
+            }
+            else
+            {
+                bullet.transform.position = transform.position;
+                bullet.GetComponent<TowerBullet>().Init(towerAttackDamage, bulletSpeed, moveDir, towerType);
+            }
+        }
     }
 }

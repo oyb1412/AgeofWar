@@ -20,7 +20,7 @@ public class CharBullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(3f * Time.deltaTime, 0f, 0f);
+        transform.Translate(6f * Time.deltaTime, 0f, 0f);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -30,7 +30,6 @@ public class CharBullet : MonoBehaviour
             case (int)charType.MIKATA:
                 if (collision.CompareTag("TekiChar"))
                 {
-                    Debug.Log("1");
                     var target = collision.GetComponent<TekiChar>();
                     target.charCurrentHP -= damage;
                     var trans = Instantiate(bloodPrefab, null).transform;

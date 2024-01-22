@@ -103,7 +103,7 @@ MonoBehaviour:
   splitType: 0
   parabolaType: 0
   towerAttackTimer: 0
-  bulletSpeed: 10
+  bulletSpeed: 25
   towerName: 
   towerSellCost: 0
   towerId: 11
