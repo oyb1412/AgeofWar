@@ -17,7 +17,8 @@ public class AudioManager : MonoBehaviour
     public Sfx sfx;
     public enum Sfx
     {
-        Attack, Create, Upgrade, Die, Lose, Select, Magic, Skill
+       DIE1,DIE2,DIE3,DIE4,DIE5,HORSE_DIE,FIRE1,FIRE2,FIRE3,FIRE4,FIRE5,FIRE6,PARABOLA,SHOTGUN,SKILL3,SPEAR,SWING0,SWING1,SWING2,SWING3,SWING4,SWING5,
+       BOW,BLOOD,
     }
 
     // Start is called before the first frame update

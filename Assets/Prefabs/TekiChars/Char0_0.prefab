@@ -176,8 +176,6 @@ MonoBehaviour:
   bulletPrefabs: {fileID: 0}
   hpBarPrefabs: {fileID: 1494851717418582748, guid: a21fc51a90ec44744966317171d73e1e, type: 3}
   hpBar: {fileID: 0}
-  mikataFrontCol: 0
-  mikataBackCol: 0
   charId: 0
   charName: 
   charCost: 0
@@ -189,9 +187,10 @@ MonoBehaviour:
   charAttackRange: 0
   charMoveSpeed: 0
   charAttackTimer: 0
+  charKillXP: 0
+  charKillGold: 0
   getGoldImage: {fileID: 7372025579120412311, guid: 11b10f58ac8d8aa47bb8074fd6e3da38, type: 3}
   getGoldText: {fileID: 0}
-  getGold: 5
 --- !u!50 &8512369952828884254
 Rigidbody2D:
   serializedVersion: 4
@@ -284,7 +283,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.22421013, y: -0.035929844}
+  m_Offset: {x: -0.13737728, y: -0.035929844}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -295,7 +294,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.12171349, y: 0.38707802}
+  m_Size: {x: 0.09598526, y: 0.38707802}
   m_EdgeRadius: 0
 --- !u!114 &920553849247176644
 MonoBehaviour:

@@ -42,6 +42,8 @@ public class Tower : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!GameManager.instance.isLive)
+            return;
         switch (towerType)
         {
             case towerType.MIKATA:
@@ -70,7 +72,7 @@ public class Tower : MonoBehaviour
                 {
                     for (int j = 0; j < type1.Length - 1; j++)
                     {
-                        if (transform.position.x - type1[j].transform.position.x > transform.position.x - type1[j + 1].transform.position.x )
+                        if (transform.position.x - type1[j].transform.position.x > transform.position.x -type1[j + 1].transform.position.x  )
                         {
                             var save = type1[j];
                             type1[j] = type1[j + 1];
@@ -80,7 +82,7 @@ public class Tower : MonoBehaviour
                 }
                 if (type1.Length > 0)
                 {
-                    if (type1[0].transform.position.x - transform.position.x < towerAttackRange)
+                    if (transform.position.x - type1[0].transform.position.x < towerAttackRange)
                         charTarget = type1[0].transform.GetComponent<MikataChar>();
                 }
                 break;
@@ -98,14 +100,9 @@ public class Tower : MonoBehaviour
                     angle = Mathf.Atan2(charTarget.transform.position.y - transform.position.y, charTarget.transform.position.x - transform.position.x) * Mathf.Rad2Deg;
                 else
                     angle = Mathf.Atan2(transform.position.y - charTarget.transform.position.y, transform.position.x - charTarget.transform.position.x) * Mathf.Rad2Deg;
-
-                angle = Mathf.Clamp(angle, 0, 70f);
                 transform.rotation = Quaternion.Euler(0, 0, angle);
-                if (angle > 0 && angle < 70f)
-                {
-                    anime.SetTrigger("Attack");
-                    moveDir = (charTarget.transform.position - transform.position).normalized;
-                }
+                anime.SetTrigger("Attack");
+                moveDir = (charTarget.transform.position - transform.position).normalized;
                 towerAttackTimer = 0;
             }
         }
@@ -125,6 +122,51 @@ public class Tower : MonoBehaviour
             {
                 bullet.transform.position = transform.position;
                 bullet.GetComponent<TowerBullet>().Init(towerAttackDamage, bulletSpeed, moveDir, towerType);
+            }
+            switch(towerId)
+            {
+                case 0:
+                    GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SWING1);
+                    break;       
+                case 1:
+                    GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SWING2);
+                    break;     
+                case 2:
+                    GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.PARABOLA);
+                    break;    
+                case 3:
+                    GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.PARABOLA);
+                    break;    
+                case 4:
+                    GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.PARABOLA);
+                    break;    
+                case 6:
+                    GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.FIRE2);
+                    break;    
+                case 7:
+                    GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.FIRE2);
+                    break;   
+                case 8:
+                    GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.FIRE2);
+                    break;     
+                case 9:
+                    GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.FIRE5);
+                    break;     
+                case 10:
+                    GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SWING5);
+                    break;
+                case 11:
+                    GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.FIRE5);
+                    break;      
+                case 12:
+                    GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SWING1);
+                    break;        
+                case 13:
+                    GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SWING1);
+                    break;        
+                case 14:
+                    GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SWING1);
+                    break;
             }
         }
     }

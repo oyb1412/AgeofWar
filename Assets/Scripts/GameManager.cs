@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public enum baseType{ MIKATA,TEKI}
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+    public bool isLive;
     public Data data;
     public CameraMovemnet mainCamera;
     public AudioManager audioManager;
@@ -27,7 +29,7 @@ public class GameManager : MonoBehaviour
     public Text expText;
     public Sprite[] skillImage;
     public GameObject skillPrefab;
-
+    public GameObject restartObject;
     [System.Serializable]
     public class Towers
     {
@@ -61,6 +63,8 @@ public class GameManager : MonoBehaviour
     {
         public GameObject baseObj;
         public int currentTowerCount;
+        public int currentTowerFrameCount;
+
         public float currentHp;
         public int currentLevel;
         public GameObject[] towerFrame;
@@ -86,12 +90,12 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
         }
-
     }
     private void Start()
     {
         Init();
-
+        isLive = true;
+        audioManager.PlayerBgm(true);
     }
     void Init()
     {
@@ -116,7 +120,7 @@ public class GameManager : MonoBehaviour
             tekiBase.towerFrame[i] = tekiBase.baseObj.transform.GetChild(i).gameObject;
         }
         mikataBase.currentTowerFrameCount = 1;
-
+        tekiBase.currentTowerFrameCount = 1;
         int count = 0;
         for(int i = 0;i < towers.Length; i++)
         {
@@ -149,12 +153,12 @@ public class GameManager : MonoBehaviour
         {
             if (mikataBase.currentLevel < baseMaxLevel)
             {
+                var percent = baseMaxHp[mikataBase.currentLevel] / mikataBase.currentHp;
                 mikataBase.currentLevel++;
-                var percent = mikataBase.currentHp / baseMaxHp[mikataBase.currentLevel];
 
                 Destroy(mikataBase.baseObj);
                 mikataBase.baseObj = Instantiate(mikataBase.BasePrefab[mikataBase.currentLevel], null);
-                mikataBase.currentHp = mikataBase.currentHp * percent;
+                mikataBase.currentHp = baseMaxHp[mikataBase.currentLevel] * percent;
                 if (mikataBase.currentTowerFrameCount == 2)
                     mikataBase.towerFrame[1].SetActive(true);
                 if (mikataBase.currentTowerFrameCount == 3)
@@ -192,13 +196,72 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void AgeUp()
+    {
 
+                var percent = baseMaxHp[tekiBase.currentLevel] / tekiBase.currentHp;
+        tekiBase.currentLevel++;
+
+        Destroy(tekiBase.baseObj);
+        tekiBase.baseObj = Instantiate(tekiBase.BasePrefab[tekiBase.currentLevel], null);
+        tekiBase.baseObj.transform.position = new Vector3(13f, -2.1f, 0f);
+
+        tekiBase.currentHp = baseMaxHp[tekiBase.currentLevel] * percent;
+                if (tekiBase.currentTowerFrameCount == 2)
+            tekiBase.towerFrame[1].SetActive(true);
+                if (tekiBase.currentTowerFrameCount == 3)
+                {
+                    tekiBase.towerFrame[1].SetActive(true);
+            tekiBase.towerFrame[2].SetActive(true);
+                }
+                if (tekiBase.currentTowerFrameCount == 4)
+                {
+                    tekiBase.towerFrame[1].SetActive(true);
+                    tekiBase.towerFrame[2].SetActive(true);
+            tekiBase.towerFrame[3].SetActive(true);
+                }
+
+
+                for (int i = 0; i < maxTowerCount; i++)
+                {
+            tekiBase.towerFrame[i] = tekiBase.baseObj.transform.GetChild(i).gameObject;
+                }
+                if (tekiBase.currentTowerFrameCount == 1)
+                    tekiBase.towerFrame[0].SetActive(true);
+                if (tekiBase.currentTowerFrameCount == 2)
+                {
+                    tekiBase.towerFrame[0].SetActive(true);
+                    tekiBase.towerFrame[1].SetActive(true);
+                }
+                if (tekiBase.currentTowerFrameCount == 3)
+                {
+                    tekiBase.towerFrame[0].SetActive(true);
+                    tekiBase.towerFrame[1].SetActive(true);
+                    tekiBase.towerFrame[2].SetActive(true);
+                }
+  
+    }
     // Update is called once per frame
     void Update()
     {
+        if (!isLive)
+            return;
+
+        if(mikataBase.currentHp <= 0 || tekiBase.currentHp <= 0)
+        {
+            audioManager.PlayerBgm(false);
+            StopAllCoroutines();
+            restartObject.SetActive(true);
+            isLive = false;
+
+        }
         UISetting();
     }
 
+    public void GameRestart()
+    {
+        SceneManager.LoadScene(0);
+    }
     void UISetting()
     {
         mikataBase.hpBar.value = mikataBase.currentHp / baseMaxHp[mikataBase.currentLevel];
@@ -222,12 +285,5 @@ public class GameManager : MonoBehaviour
             return null;
     }
 
-    //public static Collider2D MouseRayCastAll(string layer)
-    //{
-    //    Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    //    RaycastHit2D[] hit = Physics2D.RaycastAll(mousePos, Vector2.zero, 0f, LayerMask.GetMask(layer));
-    //    if (hit[0].transform.gameObject != null)
-    //        return hit[0].collider;
-    //    else return null;
-    //}
+
 }

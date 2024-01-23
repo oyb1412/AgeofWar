@@ -8,6 +8,8 @@ public class Skill4Lazer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!GameManager.instance.isLive)
+            return;
         transform.Translate(8f * Time.deltaTime, 0f, 0f);
         if (transform.position.x > 16f)
         {

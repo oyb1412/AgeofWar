@@ -22,6 +22,8 @@ public class SpritBullet : MonoBehaviour
     }
     private void Update()
     {
+        if (!GameManager.instance.isLive)
+            return;
         if (transform.position.y <= -4.2f)
             Destroy(gameObject);
     }
@@ -33,7 +35,7 @@ public class SpritBullet : MonoBehaviour
     }
     public void Init(float attackDamage,int towerType)
     {
-        damage = attackDamage * 0.5f;
+        damage = attackDamage * 0.2f;
         bulletType = (towerType)towerType;
     }
     private void OnTriggerEnter2D(Collider2D collision)

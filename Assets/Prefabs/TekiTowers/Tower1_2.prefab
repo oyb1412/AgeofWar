@@ -74,7 +74,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 4
   m_Sprite: {fileID: 21300000, guid: 7cf29e9ce72853e458b587c2a5d541fa, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
@@ -96,7 +96,7 @@ Animator:
   m_GameObject: {fileID: 5140149160244517939}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: b421cb068507e2945b55746112c68789, type: 2}
+  m_Controller: {fileID: 22100000, guid: 73fb4e5773bdb0e46a46927cec082e6e, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -119,11 +119,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9a2c64b8809dcc4db157e9d001b27f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  towerType: 0
+  towerType: 1
   splitType: 0
   parabolaType: 0
   towerAttackTimer: 0
-  bulletSpeed: 1
+  bulletSpeed: 15
   towerName: 
   towerCost: 0
   towerSellCost: 0

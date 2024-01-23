@@ -9,13 +9,12 @@ public class CameraMovemnet : MonoBehaviour
     public float rimitRight;
     Vector3 currentPos;
 
-    private void Start()
-    {
-        
-    }
+ 
     // Update is called once per frame
     void Update()
     {
+        if (!GameManager.instance.isLive)
+            return;
         Move();
     }
 
@@ -33,7 +32,7 @@ public class CameraMovemnet : MonoBehaviour
                 mousepos.x = rimitRight;
         }
 
-        if(mousepos.y < 2f)
+        if(mousepos.y < 1f)
         transform.position = Vector3.Lerp(transform.position, new Vector3(mousepos.x, 0f, -10f), cameraSpeed * Time.deltaTime);
     }
 

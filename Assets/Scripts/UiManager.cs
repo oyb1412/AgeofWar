@@ -4,13 +4,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using Unity.Mathematics;
 using Unity.VisualScripting;
-using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using static UnityEngine.GraphicsBuffer;
-using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
-using Unity.Burst.CompilerServices;
 public class UiManager : MonoBehaviour
 {
     [Header("Other")]
@@ -39,7 +35,6 @@ public class UiManager : MonoBehaviour
     public GameObject selectMainPanel;
     public GameObject mouseOnPrefab;
     public GameObject towerSellImage;
-    bool isCreate;
 
     [Header("Slider")]
     public Slider createBar;
@@ -56,7 +51,7 @@ public class UiManager : MonoBehaviour
     CharBase teki;
     SpriteRenderer[] save;
     SpriteRenderer saveSell;
-
+    bool trigger;
 
  
     [System.Serializable]
@@ -78,9 +73,12 @@ public class UiManager : MonoBehaviour
     }
     private void Update()
     {
+        if (!GameManager.instance.isLive)
+            return;
         CharHpBarOnOff("MikataChar");
         CharHpBarOnOff("TekiChar");
         CreateUnitFactorySystem();
+
     }
     void CharHpBarOnOff(string tag)
     {
@@ -90,24 +88,43 @@ public class UiManager : MonoBehaviour
             if (GameManager.MouseRayCast(tag))
             {
                 mikata = GameManager.MouseRayCast(tag).GetComponent<CharBase>();
+                if (mikata)
                 mikata.hpBar.gameObject.SetActive(true);
             }
-            else if (mikata)
-                mikata.hpBar.gameObject.SetActive(false);
+            else
+            {
+                if(mikata)
+                    if(mikata.isLive)
+                    mikata.hpBar.gameObject.SetActive(false);
+            }
         }
         else
         {
             if (GameManager.MouseRayCast(tag))
             {
-               teki = GameManager.MouseRayCast(tag).GetComponent<CharBase>();
-               teki.hpBar.gameObject.SetActive(true);
+                teki = GameManager.MouseRayCast(tag).GetComponent<CharBase>();
+                if (teki)
+                    teki.hpBar.gameObject.SetActive(true);
             }
-            else if (teki)
+            else
+            {
+                if(teki)
+                    if(teki.isLive)
                 teki.hpBar.gameObject.SetActive(false);
+            }
         }
     }
     public void ClickUnitBtn()
     {
+        if (!trigger)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                factory[i].chars.charArray = new CharBase[3];
+                Debug.Log(i);
+            }
+            trigger = true;
+        }
         selectMainPanel.SetActive(false);
         var level = GameManager.instance.mikataBase.currentLevel;
         unitPanel[level].SetActive(true);
@@ -115,6 +132,14 @@ public class UiManager : MonoBehaviour
     }   
     public void ClickTowerBtn()
     {
+        if (!trigger)
+        {
+            for (int i = 0; i < factory.Length; i++)
+            {
+                factory[i].chars.charArray = new CharBase[3];
+            }
+            trigger = true;
+        }
         selectMainPanel.SetActive(false);
         var level = GameManager.instance.mikataBase.currentLevel;
         towerPanel[level].SetActive(true);
@@ -132,10 +157,7 @@ public class UiManager : MonoBehaviour
 
                 createBlockCount++;
                 createBlock[createBlockCount-1].SetActive(true);
-
-                if (GameManager.instance.charClassArray[index].charArray.Length > 0)
-                    factory[createBlockCount - 1].chars.charArray = GameManager.instance.charClassArray[index].charArray;
-
+                factory[createBlockCount - 1].chars.charArray = GameManager.instance.charClassArray[index].charArray;
                 factory[createBlockCount - 1].index = index;
                 factory[createBlockCount - 1].num = 0;
                 factory[createBlockCount - 1].createTime = GameManager.instance.charClassArray[index].charArray[0].charTrainingTime;
@@ -158,12 +180,16 @@ public class UiManager : MonoBehaviour
                 currentCreateTime = 0f;
                 createBar.value = 0f;
                 createText.text = "";
-
+                var temp = factory[0];
                 for (int i = 1; i < createBlockCount; i++)
                 {
-                    factory[i - 1] = factory[i];
+                    factory[i -1] = factory[i];
                 }
+                factory[createBlockCount - 1] = temp;
+
+
                 createBlockCount--;
+
                 createBlock[createBlockCount].SetActive(false);
 
             }
@@ -182,8 +208,7 @@ public class UiManager : MonoBehaviour
 
                 createBlock[createBlockCount-1].SetActive(true);
  
-                if (GameManager.instance.charClassArray[index].charArray.Length > 0)
-                    factory[createBlockCount - 1].chars.charArray = GameManager.instance.charClassArray[index].charArray;
+                factory[createBlockCount - 1].chars.charArray = GameManager.instance.charClassArray[index].charArray;
                 factory[createBlockCount - 1].index = index;
                 factory[createBlockCount - 1].num = 1;
                 factory[createBlockCount - 1].createTime = GameManager.instance.charClassArray[index].charArray[1].charTrainingTime;
@@ -199,12 +224,8 @@ public class UiManager : MonoBehaviour
             if (createBlockCount < createBlockMaxCount)
             {
                 createBlockCount++;
-
                 createBlock[createBlockCount-1].SetActive(true);
-  
-                if (GameManager.instance.charClassArray[index].charArray.Length > 0)
-                    factory[createBlockCount - 1].chars.charArray = GameManager.instance.charClassArray[index].charArray;
-
+                factory[createBlockCount - 1].chars.charArray = GameManager.instance.charClassArray[index].charArray;
                 factory[createBlockCount - 1].index = index;
                 factory[createBlockCount - 1].num = 2;
                 factory[createBlockCount - 1].createTime = GameManager.instance.charClassArray[index].charArray[2].charTrainingTime;
@@ -447,6 +468,8 @@ public class UiManager : MonoBehaviour
                     break;
                 case 3:
                     skillPrefabs[3].SetActive(true);
+                    GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SKILL3);
+
                     break;
                 case 4:
                     skillPrefabs[4].SetActive(true);
@@ -467,7 +490,7 @@ public class UiManager : MonoBehaviour
                 targets[i].GetComponent<MikataChar>().skill2On = true;
             }
             yield return new WaitForSeconds(1f);
-            if(skill3Count > 20)
+            if(skill3Count > 10)
             {
                 for (int i = 0; i < targets.Length; i++)
                 {
@@ -505,7 +528,7 @@ public class UiManager : MonoBehaviour
 
         while (true)
         {
-            fill.fillAmount += Time.deltaTime / 60;
+            fill.fillAmount += Time.deltaTime * 0.2f;
             yield return new WaitForSeconds(0.01f);
 
             if (fill.fillAmount >= 1f)

@@ -10,7 +10,7 @@ public class CharBullet : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       
+        Destroy(gameObject, 1.5f);
     }
     public void Init(float damage, int type)
     {
@@ -20,7 +20,15 @@ public class CharBullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(6f * Time.deltaTime, 0f, 0f);
+        if (!GameManager.instance.isLive)
+            return;
+
+        if (type == (int)charType.MIKATA)
+            transform.Translate(6f * Time.deltaTime, 0f, 0f);
+        else
+            transform.Translate(-6f * Time.deltaTime, 0f, 0f);
+
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

@@ -31,14 +31,25 @@ public class TowerBullet : MonoBehaviour
         }
         else
         {
-            limitPos = y;
-            transform.DOMoveX(x, 1.5f).SetEase(Ease.OutQuad);
-            transform.DOMoveY(y, 1f).SetEase(Ease.InQuad);
+            if (bulletType == towerType.MIKATA)
+            {
+                limitPos = y-0.1f;
+                transform.DOMoveX(x+0.4f, 1.5f).SetEase(Ease.OutQuad);
+                transform.DOMoveY(y-0.2f, 1f).SetEase(Ease.InQuad);
+            }
+            else
+            {
+                limitPos = y - 0.1f;
+                transform.DOMoveX(x - 0.4f, 1.5f).SetEase(Ease.OutQuad);
+                transform.DOMoveY(y - 0.2f, 1f).SetEase(Ease.InQuad);
+            }
         }
     }
 
     private void Update()
     {
+        if (!GameManager.instance.isLive)
+            return;
         if (transform.position.y < limitPos)
             Destroy(gameObject);
     }

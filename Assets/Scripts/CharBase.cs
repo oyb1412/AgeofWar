@@ -25,8 +25,7 @@ public class CharBase : MonoBehaviour
     public Slider hpBar;
 
     [Header("CharBehavior")]
-    public bool mikataFrontCol;
-    public bool mikataBackCol;
+    protected bool iscol;
 
 
     [Header("CharInfo")]
@@ -54,7 +53,8 @@ public class CharBase : MonoBehaviour
         isMove = true;
         if (UnitType == unitType.MELEE)
         {
-            attackCol = transform.GetChild(0).GetComponent<Collider2D>();
+            if (transform.GetChild(0).GetComponent<Collider2D>())
+                attackCol = transform.GetChild(0).GetComponent<Collider2D>();
             attackCol.enabled = false;
         }
         hpBar = Instantiate(hpBarPrefabs, GameObject.Find("WorldCanvas").transform);
@@ -91,27 +91,70 @@ public class CharBase : MonoBehaviour
 
     virtual protected void Update()
     {
+        if (!GameManager.instance.isLive)
+            return;
         if (isBattle)
         {
             anime.SetBool("Run", false);
             charAttackTimer += Time.deltaTime;
             if (charAttackTimer > charAttackSpeed)
             {
+               
                 anime.SetTrigger("Attack");
                 charAttackTimer = 0;
             }
         }
-
-
-        hpBar.GetComponent<RectTransform>().transform.position = new Vector2(transform.position.x, transform.position.y + 0.6f);
-        if (charCurrentHP < charMaxHP)
+        if(isLive)
         {
-            hpBar.value = charCurrentHP / charMaxHP;
+            transform.position = new Vector3(transform.position.x, -3.5f);
+        }
+        if (hpBar)
+        {
+            hpBar.GetComponent<RectTransform>().transform.position = new Vector2(transform.position.x, transform.position.y + 0.6f);
+            if (charCurrentHP < charMaxHP)
+            {
+                hpBar.value = charCurrentHP / charMaxHP;
+            }
         }
     }
     public void OnMeleeCol()
     {
         StartCoroutine(OnMeleeColCorutine());
+        switch (charId)
+        {
+            case 0:
+                GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SWING0);
+                break;
+            case 2:
+                GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SPEAR);
+                break;
+            case 3:
+                GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SWING2);
+                break;
+            case 5:
+                GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SPEAR);
+                break;
+            case 6:
+                GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SPEAR);
+                break;
+            case 8:
+                GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.FIRE2);
+                break;
+            case 9:
+                GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.BLOOD);
+                break;
+            case 11:
+                GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.FIRE6);
+                break;
+            case 12:
+                GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SWING5);
+                break;
+
+            case 14:
+                GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.FIRE4);
+                break;
+
+        }
     }
 
     public void OnRangeAttack()
@@ -128,11 +171,31 @@ public class CharBase : MonoBehaviour
 
                 break;
         }
+        switch (charId)
+        {
+            case 1:
+            case 4:
+                GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.BOW);
+                break;
+            case 7:
+                GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.FIRE1);
+                break;
+            case 8:
+                GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.FIRE2);
+                break;
+            case 10:
+                GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.FIRE3);
+                break;
+
+            case 13:
+                GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SHOTGUN);
+                break;
+        }
     }
     IEnumerator OnMeleeColCorutine()
     {
         attackCol.enabled = true;
-        yield return new WaitForSeconds(attackColTimer);
+        yield return new WaitForSeconds(0.05f);
         attackCol.enabled = false;
     }
 
@@ -143,17 +206,19 @@ public class CharBase : MonoBehaviour
         isBattle = false;
         isMove = false;
         isLive = false;
-        hpBar.gameObject.SetActive(false);
+        Destroy(hpBar.gameObject);
+
         anime.SetBool("Run", false);
         anime.SetTrigger("Die");
         yield return new WaitForSeconds(deadAnimeTimer);
+
         Destroy(gameObject);
     }
  
 
     protected void Movement(charType type)
     {
-        if (!isMove)
+        if (!isMove ||!isLive)
             return;
 
             anime.SetBool("Run", true);

@@ -7,7 +7,6 @@ using static UnityEngine.UI.CanvasScaler;
 public class AIManager : MonoBehaviour
 {
     public enum agetype{ AGE0,AGE1,AGE2,AGE3,AGE4};
-    int currentAge;
     int charLevel;
     int count;
     [System.Serializable]
@@ -28,16 +27,14 @@ public class AIManager : MonoBehaviour
     {
         towerQueue = new Tower[4];
         StartCoroutine(SpawnTeki());
-        StartCoroutine(Age0Corutine());
-        
+        StartCoroutine(Age0Corutine()); 
     }
 
-    private void Update()
-    {
-    }
+  
     void CreateFrame(int index)
     {
         GameManager.instance.tekiBase.towerFrame[index].SetActive(true);
+        GameManager.instance.tekiBase.currentTowerFrameCount++;
     }
     void CreateTower(int num,int slot)
     {
@@ -45,23 +42,23 @@ public class AIManager : MonoBehaviour
         {
             case 0:
                 //12.2f , -1.7f
-                towerQueue[slot] = Instantiate(towerClassArray[currentAge].towerArray[num], null);
+                towerQueue[slot] = Instantiate(towerClassArray[GameManager.instance.tekiBase.currentLevel].towerArray[num], null);
                 towerQueue[slot].transform.position = new Vector3(12.2f, -1.7f);
                 break;
             case 1:
                 //12.2f, -0.5f
-                towerQueue[slot] = Instantiate(towerClassArray[currentAge].towerArray[num], null);
+                towerQueue[slot] = Instantiate(towerClassArray[GameManager.instance.tekiBase.currentLevel].towerArray[num], null);
                 towerQueue[slot].transform.position = new Vector3(12.2f, -0.5f);
                 break;
             case 2:
                 //12.2f, 0.5f
-                towerQueue[slot] = Instantiate(towerClassArray[currentAge].towerArray[num], null);
-                towerQueue[slot].transform.position = new Vector3(12, 2f, 0.5f);
+                towerQueue[slot] = Instantiate(towerClassArray[GameManager.instance.tekiBase.currentLevel].towerArray[num], null);
+                towerQueue[slot].transform.position = new Vector3(12.2f,0.5f);
                 break;
             case 3:
                 //12.2f, 1.6f
-                towerQueue[slot] = Instantiate(towerClassArray[currentAge].towerArray[num], null);
-                towerQueue[slot].transform.position = new Vector3(12, 2f, 1.6f);
+                towerQueue[slot] = Instantiate(towerClassArray[GameManager.instance.tekiBase.currentLevel].towerArray[num], null);
+                towerQueue[slot].transform.position = new Vector3(12.2f, 1.6f);
                 break;
         }
     }
@@ -74,7 +71,7 @@ public class AIManager : MonoBehaviour
     {
         var type = Random.Range(0, charLevel + 1);
 
-        var trans = Instantiate(charClassArray[currentAge].charArray[type], null);
+        var trans = Instantiate(charClassArray[GameManager.instance.tekiBase.currentLevel].charArray[type], null);
         trans.transform.position = new Vector2(10f, -3.5f);
     }
     IEnumerator Age0Corutine()
@@ -109,13 +106,15 @@ public class AIManager : MonoBehaviour
                     SellTower(0);
                     CreateTower(2, 0);
                     break;
-                case 200:
-                    //age upgrade
-                    count = 0;
-                    currentAge++;
-                    charLevel = 0;
-                    StartCoroutine(Age1Corutine());
-                    break;
+            }
+            if(count == 200)
+            {
+                //age upgrade
+                count = 0;
+                charLevel = 0;
+                GameManager.instance.AgeUp();
+                StartCoroutine(Age1Corutine());
+                break;
             }
             yield return new WaitForSeconds(1f);
 
@@ -127,6 +126,8 @@ public class AIManager : MonoBehaviour
         while (true)
         {
             count++;
+            Debug.Log(count);
+
             switch (count)
             {
                 case 25:
@@ -153,13 +154,16 @@ public class AIManager : MonoBehaviour
                     //turret1 slot1
                     CreateTower(1, 1);
                     break;
-                case 200:
-                    //age upgrade
-                    count = 0;
-                    currentAge++;
-                    charLevel = 0;
-                    StartCoroutine(Age2Corutine());
-                    break;
+
+            }
+            if(count == 200)
+            {
+                //age upgrade
+                count = 0;
+                GameManager.instance.AgeUp();
+                charLevel = 0;
+                StartCoroutine(Age2Corutine());
+                break;
             }
             yield return new WaitForSeconds(1f);
 
@@ -171,6 +175,8 @@ public class AIManager : MonoBehaviour
         while (true)
         {
             count++;
+            Debug.Log(count);
+
             switch (count)
             {
                 case 25:
@@ -200,14 +206,16 @@ public class AIManager : MonoBehaviour
                     SellTower(1);
                     CreateTower(2, 2);
                     break;
-                case 200:
-                    //age upgrade
-                    count = 0;
-                    currentAge++;
-                    charLevel = 0;
 
-                    StartCoroutine(Age3Corutine());
-                    break;
+            }
+            if (count == 200)
+            {
+                //age upgrade
+                count = 0;
+                GameManager.instance.AgeUp();
+                charLevel = 0;
+                StartCoroutine(Age3Corutine());
+                break;
             }
             yield return new WaitForSeconds(1f);
 
@@ -219,6 +227,8 @@ public class AIManager : MonoBehaviour
         while (true)
         {
             count++;
+            Debug.Log(count);
+
             switch (count)
             {
                 case 37:
@@ -237,14 +247,15 @@ public class AIManager : MonoBehaviour
                     SellTower(2);
                     CreateTower(1, 1);
                     break;
-                case 200:
-                    //age upgrade
-                    count = 0;
-                    currentAge++;
-                    charLevel = 0;
-
-                    StartCoroutine(Age4Corutine());
-                    break;
+            }
+            if (count == 200)
+            {
+                //age upgrade
+                count = 0;
+                GameManager.instance.AgeUp();
+                charLevel = 0;
+                StartCoroutine(Age4Corutine());
+                break;
             }
             yield return new WaitForSeconds(1f);
 
@@ -256,6 +267,8 @@ public class AIManager : MonoBehaviour
         while (true)
         {
             count++;
+            Debug.Log(count);
+
             switch (count)
             {
                 case 37:
@@ -294,7 +307,7 @@ public class AIManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         float ran = Random.Range(0f, 1f);
-        if(ran < 0.3f && TekiChar.count < 6)
+        if (ran < 0.3f && TekiChar.count < 6)
         {
             CreateTeki();
         }
