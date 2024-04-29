@@ -79,7 +79,6 @@ public class AIManager : MonoBehaviour
         while(true)
         {
             count++;
-            Debug.Log(count);
 
             switch (count)
             {

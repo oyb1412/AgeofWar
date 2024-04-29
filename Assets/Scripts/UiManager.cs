@@ -528,7 +528,7 @@ public class UiManager : MonoBehaviour
 
         while (true)
         {
-            fill.fillAmount += Time.deltaTime * 0.2f;
+            fill.fillAmount += Time.deltaTime * 0.1f;
             yield return new WaitForSeconds(0.01f);
 
             if (fill.fillAmount >= 1f)
