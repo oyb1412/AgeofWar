@@ -1,263 +1,76 @@
-## **📃핵심 기술**
+### 
 
-### ・유닛 예약 생성 시스템
+# Age of war
 
-🤔**WHY?**
 
-예약 순서대로 자연스럽게 유닛을 생성하는 로직의 필요성
+---
 
-🤔**HOW?**
+## Description
 
- 관련 코드
+---
 
-- UiManager
-    
-    ```csharp
-    using System.Collections;
-    using UnityEngine;
-    using UnityEngine.UI;
-    using UnityEngine.EventSystems;
-    public class UiManager : MonoBehaviour
-    {
-        [Header("Other")]
-        public float currentCreateTime;
-        public int createBlockCount;
-        public int createBlockMaxCount;
-        
-        [System.Serializable]
-        public class Factory
-        {
-            public GameManager.Chars chars;
-            public int index;
-            public int num;
-            public float createTime;
-        }
-    
-        public Factory[] factory;
-        
-    	 public void CreateUnit0Btn(int index)
-    	{
-        if (GameManager.instance.currentGold >= GameManager.instance.charClassArray[index].charArray[0].charCost)
-        {
-    
-            if (createBlockCount < createBlockMaxCount)
-            {
-                createBlockCount++;
-                createBlock[createBlockCount-1].SetActive(true);
-                factory[createBlockCount - 1].chars.charArray = GameManager.instance.charClassArray[index].charArray;
-                factory[createBlockCount - 1].index = index;
-                factory[createBlockCount - 1].num = 0;
-                factory[createBlockCount - 1].createTime = GameManager.instance.charClassArray[index].charArray[0].charTrainingTime;
-                GameManager.instance.currentGold -= GameManager.instance.charClassArray[index].charArray[0].charCost;
-            }
-        }
-    	}
-    	
-    	 void CreateUnitFactorySystem()
-    	 {
-         if (createBlockCount > 0 && factory[0] != null)
-         {
-             currentCreateTime += Time.deltaTime;
-             createBar.value = currentCreateTime / factory[0].createTime;
-             createText.text = "Traning to " +factory[0].chars.charArray[factory[0].num].charName + "...";
-             if (createBar.value >= 1f)
-             {
-                 var unit = Instantiate(factory[0].chars.charArray[factory[0].num],null).transform;
-                 unit.position = transform.position;
-                 currentCreateTime = 0f;
-                 createBar.value = 0f;
-                 createText.text = "";
-                 var temp = factory[0];
-                 for (int i = 1; i < createBlockCount; i++)
-                 {
-                     factory[i -1] = factory[i];
-                 }
-                 factory[createBlockCount - 1] = temp;
-    
-                 createBlockCount--;
-    
-                 createBlock[createBlockCount].SetActive(false);
-             }
-         }
-    	 }
-    }
-    ```
-    
 
-🤓**Result!**
+- 🔊프로젝트 소개
 
-유닛의 생성을 즉발이 아닌 생성 시간이 완료되야 생성되고, 미리 예약한 순서대로 생성되도록 변경
+  Age of war는 동명의 유명 플래시게임의 모작입니다. 원작의 밸런스를 그대로 채용하였으며, 무엇보다 원작을 그대로 구현하는 것에 중점을 두었습니다.
+
+       
+
+- 개발 기간 : 2024.01.16 - 2024.01.23
+
+- 🛠️사용 기술
+
+   -언어 : C#
+
+   -엔진 : Unity Engine
+
+   -데이터베이스 : 로컬
+
+   -개발 환경: Windows 10, Unity 2021.3.10f1
+
+
+
+- 💻구동 화면
+![스크린샷(7)](https://github.com/oyb1412/AgeofWar/assets/154235801/046c0a7b-7106-414f-a80f-5560a0adee23)
+
+## 목차
+
+---
+
+- 기획 의도
+- 핵심 로직
+
+
+### 기획 의도
+
+---
+
+- 원작을 구현한 모작 개발
+
+
+### 핵심 로직
+
+---
+![Line_1_(1)](https://github.com/oyb1412/TinyDefense/assets/154235801/f664c47e-d52b-4980-95ec-9859dea11aab)
+### ・커맨드 패턴을 이용한 유닛 예약 생성 시스템
+
+유닛의 생성을 예약 후, 예약된 순서대로 자동으로 유닛을 생성하는 로직
+
+![1](https://github.com/oyb1412/AgeofWar/assets/154235801/78d93fdf-ff6d-4a58-bee4-b8982cf74506)
+![Line_1_(1)](https://github.com/oyb1412/TinyDefense/assets/154235801/f664c47e-d52b-4980-95ec-9859dea11aab)
+
 
 ### ・카메라 이동 및 카메라 쉐이크
 
-🤔**WHY?**
+카메라에 모두 담기지 않는 넓은 크기의 씬과 각종 효과에 의한 카메라쉐이크
 
-카메라에 모두 담기지 않는, 넓은 크기의 씬과 각종 효과에 의한 카메라쉐이크의 필요성
-
-🤔**HOW?**
-
- 관련 코드
-
-- CameraMovemnet
-    
-    ```csharp
-    using System.Collections;
-    using UnityEngine;
-    
-    public class CameraMovemnet : MonoBehaviour
-    {
-        public float cameraSpeed;
-        public float rimitLeft;
-        public float rimitRight;
-        Vector3 currentPos;
-    
-        void Update()
-        {
-            if (!GameManager.instance.isLive)
-                return;
-            Move();
-        }
-    
-        void Move()
-        {
-            var mousepos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            if (transform.position.x <= rimitLeft)
-            {
-                if (mousepos.x <= rimitLeft)
-                    mousepos.x = rimitLeft;
-            }
-            else if (transform.position.x >= rimitRight)
-            {
-                if (mousepos.x >= rimitRight)
-                    mousepos.x = rimitRight;
-            }
-    
-            if(mousepos.y < 1f)
-            transform.position = Vector3.Lerp(transform.position, new Vector3(mousepos.x, 0f, -10f), cameraSpeed * Time.deltaTime);
-        }
-    
-        public void ScreenShake()
-        {
-            currentPos = transform.position;
-            StartCoroutine(Shake());
-        }
-    
-        IEnumerator Shake()
-        {
-            float elapsedTime = 0f;
-    
-            while (elapsedTime < 2f)
-            {
-                Vector3 shakeOffset = Random.insideUnitSphere * 0.1f;
-    
-                transform.position = currentPos + shakeOffset;
-    
-                elapsedTime += Time.deltaTime;
-    
-                yield return null;
-            }
-    
-        }
-    }
-    ```
-    
-
-🤓**Result!**
-
-마우스를 외곽에 위치시켜 카메라를 각각 왼쪽, 오른쪽으로 Lerp효과를 주며 이동시켜, 부드러운 카메라 이동을 구현. 스킬 사용 등의 임팩트가 필요한 순간, 카메라를 일정시간동안 흔들어 연출력을 높임
+![그림6](https://github.com/oyb1412/AgeofWar/assets/154235801/237a7c0d-fae4-4713-ac9a-4425f6cc65d7)
+![Line_1_(1)](https://github.com/oyb1412/TinyDefense/assets/154235801/f664c47e-d52b-4980-95ec-9859dea11aab)
 
 ### ・OnPoint인터페이스를 활용한 UI 인풋 시스템
 
-🤔**WHY?**
+UI에 마우스 커서를 올릴 시 특정 Text를 출력하는 등 UI와 마우스의 상호작용 구현
 
-UI에 마우스 커서를 올릴 시 특정 Text를 출력하는 등 UI와 마우스의 상호작용 구현의 필요성
-
-🤔**HOW?**
-
- 관련 코드
-
-- UiEvent
-    
-    ```csharp
-    using UnityEngine;
-    using UnityEngine.EventSystems;
-    using UnityEngine.UI;
-    
-    public class UiEvent : MonoBehaviour
-        , IPointerEnterHandler
-        , IPointerExitHandler
-    {
-        GameObject data;
-        public Text mouseOnText;
-    
-        public void OnPointerEnter(PointerEventData eventData)
-        {
-            var basedata = GameManager.instance.data;
-    
-            if (eventData.pointerCurrentRaycast.gameObject)
-            {
-                data = eventData.pointerCurrentRaycast.gameObject;
-                if(data.GetComponent<Image>())
-                    data.GetComponent<Image>().color = Color.gray;
-                switch (data.name)
-                {
-                    case "UnitBtn":
-                        mouseOnText.text = "train unit menu";
-                        break;
-                    case "TowerBtn":
-                        mouseOnText.text = "build turret menu";
-                        break;
-                    case "SellBtn":
-                        mouseOnText.text = "sell a turret";
-                        break;
-                    case "AddBtn":
-                        if (GameManager.instance.mikataBase.currentTowerFrameCount == GameManager.instance.maxTowerFrameCount)
-                            mouseOnText.text = "can't build anymore";
-                        else
-                            mouseOnText.text = basedata.slot_cost[GameManager.instance.mikataBase.currentTowerFrameCount - 1] + "$ - add a turret spot";
-                        break;
-                    case "LevelUpBtn":
-                        if(GameManager.instance.mikataBase.currentLevel == GameManager.instance.baseMaxLevel)
-                            mouseOnText.text = "you cannot evolve more anymore";
-                        else
-                            mouseOnText.text = basedata.xp_cost[GameManager.instance.mikataBase.currentLevel] + "xp - Evolve to next age";
-                        break;
-                    case "Return":
-                        mouseOnText.text = "return to previous menu";
-                        break;
-    
-                    case "Tower":
-                        var tower = data.GetComponent<TowerButton>();
-                        mouseOnText.text = tower.towerCost + "$ - " + tower.towerName;
-                        break;
-    
-                    case "Unit":
-                        var unit = data.GetComponent<UnitButton>();
-                        mouseOnText.text = unit.unitCost + "$ - " + unit.unitName;
-                        break;
-                }
-    
-              
-            }
-        }
-    
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            if (data)
-            {
-                if (data.GetComponent<Image>())
-                    data.GetComponent<Image>().color = Color.white;
-    
-                mouseOnText.text = "";
-    
-            }
-        }
-    }
-    ```
-    
-
-🤓**Result!**
-
-지정한 UI에 마우스 커서를 가져다 대거나 땔 경우 지정해둔 Text가 출력되거나 사라지는등 UI와 마우스의 상호작용을 구현
-
+![그림7](https://github.com/oyb1412/AgeofWar/assets/154235801/2b14857c-7ac8-45f3-9306-a2e0eee55f89)
+![Line_1_(1)](https://github.com/oyb1412/TinyDefense/assets/154235801/f664c47e-d52b-4980-95ec-9859dea11aab)
 
